@@ -11,6 +11,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TypeDocumentController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,6 +28,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('home');
 });
+
+
+Route::get('/register', [UserController::class,'create']);
+Route::post('/register', [UserController::class,'store']);
+Route::get('/login', [UserController::class,'login'])->name('login');
+Route::post('/connect', [UserController::class,'connect']);
+Route::post('/logout', [UserController::class, 'destroy'])
+    ->middleware('auth');
 
 Route::prefix('admin')->group(function(){
     Route::get('/',[AdminController::class, 'index'])->name('dashboard');
