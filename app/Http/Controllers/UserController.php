@@ -17,7 +17,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = User::all();
+        $users = User::all();
+        return view('auth.index',compact('users'));
     }
 
     public function login(){
@@ -40,6 +41,16 @@ class UserController extends Controller
 
     }
 
+    public function logout(Request $request){
+         Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+ 
+        
+        return redirect('/');
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -111,15 +122,10 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function delete(int $id)
     {
-        Auth::logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
- 
+        User::destroy($id);
         
-        return redirect('/');
+        return redirect('/users');
     }
 }

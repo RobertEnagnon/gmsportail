@@ -34,10 +34,13 @@ Route::get('/register', [UserController::class,'create']);
 Route::post('/register', [UserController::class,'store']);
 Route::get('/login', [UserController::class,'login'])->name('login');
 Route::post('/connect', [UserController::class,'connect']);
-Route::post('/logout', [UserController::class, 'destroy'])
+Route::post('/logout', [UserController::class, 'logout'])
     ->middleware('auth');
+Route::get('/users', [UserController::class,'index']);
+Route::delete('/users/delete{id}',[UserController::class,'delete']) ;   
 
-Route::prefix('admin')->group(function(){
+
+Route::middleware('auth')->prefix('admin')->group(function(){
     Route::get('/',[AdminController::class, 'index'])->name('dashboard');
 
     // Les routes pour gérer les documents
