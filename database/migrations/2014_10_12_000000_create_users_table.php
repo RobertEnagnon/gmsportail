@@ -24,6 +24,10 @@ return new class extends Migration
             $table->dateTime('derniere_con')->nullable()->default(null);
             $table->rememberToken();
             $table->timestamps();
+
+
+            $table->foreign('client_id')->references('id')->on('clients')
+            ->onDelete('restrict');
         });
     }
 

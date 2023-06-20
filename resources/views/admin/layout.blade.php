@@ -7,6 +7,9 @@
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+  {{-- FullCalendar librairie --}}
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="{{asset('adminlte/plugins/fontawesome-free/css/all.min.css')}}">
 
@@ -76,19 +79,19 @@
           </a>
           
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-            <span class="dropdown-header">Ronasdev</span>
+            <span class="dropdown-header bg-info h1" style="font-size: px">{{Auth::user()->prenom}}</span>
             <div class="dropdown-divider"></div>
             <a href="#" class="dropdown-item">
-              <i class="fas fa-envelope mr-2"></i>Mon profile
+              <i class="fas fa-user mr-2"></i>Mon profile
             </a>
             <a href="#" class="dropdown-item">
-              <i class="fas fa-users mr-2"></i> Paramettres
+              <i class="fas fa-cog mr-2"></i> Paramètres
             </a>
            
               <form  class="dropdown-item" method="POST" action="/logout">
                 @csrf
                 <button type="submit" class="btn">
-                  <i class="fas fa-file mr-2"></i> Se deconnecter
+                  <i class="fas fa-sign-out-alt mr-2"></i> Se deconnecter
                 </button>
               </form>
            
@@ -129,7 +132,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="{{ route('planning.index') }}" class="nav-link">
                 <i class="nav-icon fas fa-calendar"></i>
                 <p>
                   Tâches et Planning

@@ -39,9 +39,10 @@ class SiteController extends Controller
             'societe_id'=>$request->societe_id,
             'client_id'=>$request->client_id,
         ])){
-            
-            return to_route('sites',[],201);
+            flash()->addSuccess("Site créé avec sucèss");
+            return to_route('sites');
         } else {
+            flash()->addError('Erreur! Echec de création du site');
             return to_route('site_create',$request->id);
         }
 
@@ -70,15 +71,28 @@ class SiteController extends Controller
             'societe_id'=>$request->societe_id,
             'client_id'=>$request->client_id,
         ])){
-            
-            return to_route('sites',[],201);
+            flash()->addSuccess('Sucèss! Site modifié avec sucèss');
+            return to_route('sites');
         } else {
+            flash()->addError('Oops! Erreur de modifications');
             return to_route('site_edit',$request->id);
         }
     }
 
     public function delete(int $id){
-        Site::destroy($id);
-        return to_route('sites');
+        try {
+            Site::destroy($id);
+            flash()->addSuccess('Sucèss! Site supprimé avec sucèss');
+            return to_route('sites');
+        } catch (\Throwable $th) {
+            flash()->options([
+                'timeout' => 10000, // 3 seconds
+                'position' => 'top-center',
+                ])->addError('Erreur! Vous ne pouvez pas supprimer ce Site
+                         car d\'autre entités dépendent de lui. Vous devez supprimez toutes 
+                         les entités qui dépendent de ce Site avant de le supprimer');
+            
+            return to_route('sites');
+        }
     }
 }

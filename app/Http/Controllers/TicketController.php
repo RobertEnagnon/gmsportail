@@ -81,8 +81,10 @@ class TicketController extends Controller
             'priorite_id'=>$request->priorite_id,
             'user_id'=>$request->user_id
         ])) {
+            flash()->addSuccess("Ticket créé avec sucèss");
             return to_route('tickets');
         } else {
+            flash()->addError('Erreur! Echec de création du ticket');
             return to_route('ticket_create');
         }
         
@@ -147,16 +149,30 @@ class TicketController extends Controller
             'priorite_id'=>$request->priorite_id,
             'user_id'=>$request->user_id
         ])) {
+            flash()->addSuccess('Sucèss! Ticket modifié avec sucèss');
             return to_route('tickets');
         } else {
-            return to_route('ticket_edit');
+            flash()->addError('Oops! Erreur de modifications');
+            return to_route('ticket_edit',$request->id);
         }
     }
 
     public function delete(int $id){
-        Ticket::destroy($id);
+        try {
+            Ticket::destroy($id);
+            flash()->addSuccess('Sucèss! Ticket supprimé avec sucèss');
+            return to_route('tickets');
 
-        return to_route('tickets');
+        } catch (\Throwable $th) {
+            flash()->options([
+                'timeout' => 10000, // 3 seconds
+                'position' => 'top-center',
+                ])->addError('Erreur! Vous ne pouvez pas supprimer ce ticket
+                         car d\'autre entités dépendent de lui. Vous devez supprimez toutes 
+                         les entités qui dépendent de ce ticket avant de le supprimer');
+            
+            return to_route('tickets');
+        }
     }
 
 }

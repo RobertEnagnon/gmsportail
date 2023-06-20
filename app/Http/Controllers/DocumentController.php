@@ -9,6 +9,7 @@ use App\Models\TypeDocument;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
+
 class DocumentController extends Controller
 {
     public function index(){
@@ -68,14 +69,12 @@ class DocumentController extends Controller
             'date'=>Carbon::parse($request->date),
         ])) {
             
-            return to_route('documents',[],201);
+            flash()->addSuccess("Document créé avec sucèss");
+            return redirect()->route('documents');
         } else {
-            return to_route('document_create');
-        }
-        
-       
-
-        
+            flash()->addError('Erreur! Echec de création du document');
+            return redirect()->route('document_create');
+        }  
 
     }
 
@@ -128,16 +127,31 @@ class DocumentController extends Controller
             'date'=>Carbon::parse($request->date),
         ])) {
             
-            return to_route('documents',[],201);
+            flash()->addSuccess('Sucèss! Document modifié avec sucèss');
+            return to_route('documents');
         } else {
+            flash()->addError('Oops! Erreur de modifications');
             return to_route('document_edit',$request->id);
         }
     }
 
     public function delete(int $id){
        
+       try {
         Document::destroy($id);
-
+        flash()->addSuccess('Sucèss! Document supprimé avec sucèss');
         return to_route('documents');
+       } catch (\Throwable $th) {
+        flash()->options([
+            'timeout' => 10000, // 3 seconds
+            'position' => 'top-center',
+            ])->addError('Erreur! Vous ne pouvez pas supprimer ce Document
+                     car d\'autre entités dépendent de lui. Vous devez supprimez toutes 
+                     les entités qui dépendent de ce Document avant de le supprimer');
+        
+            return to_route('documents');
+       }
+
+        
     }
 }

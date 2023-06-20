@@ -6,6 +6,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EmployeController;
 use App\Http\Controllers\FactureController;
 use App\Http\Controllers\OptionController;
+use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\PrioriteController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SiteController;
@@ -61,6 +62,17 @@ Route::middleware('auth')->prefix('admin')->group(function(){
         Route::get('/edit/{facture}',[FactureController::class,'edit'])->name('facture_edit');
         Route::put('/update',[FactureController::class,'update'])->name('facture_update');
         Route::delete('/delete/{id}',[FactureController::class,'delete'])->name('facture_delete');
+    });
+
+    Route::prefix('plannings')->group(function(){
+        Route::get('/', [PlanningController::class,'index'])->name('planning.index');
+        Route::get('/events', [PlanningController::class,'getEvents'])->name('planning.getEvents');
+        Route::get('/create', [PlanningController::class,'create'])->name('planning.create');
+        Route::post('/store', [PlanningController::class,'store'])->name('planning.store');
+        Route::get('/edit/{planning}', [PlanningController::class,'edit'])->name('planning.edit');
+        Route::put('/update/{planning}', [PlanningController::class,'update'])->name('planning.update');
+        Route::delete('/destroy/{planning}', [PlanningController::class,'destroy'])->name('planning.destroy');
+
     });
 
     Route::prefix('tickets')->group(function(){

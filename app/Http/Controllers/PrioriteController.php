@@ -22,10 +22,11 @@ class PrioriteController extends Controller
         if(Priorite::create([
             'libelle'=>$request->libelle
         ])){
-            
-            return to_route('options',[],201);
+            flash()->addSuccess("Priorité créée avec sucèss");
+            return to_route('options');
         } else {
-            return to_route('priorite_create',$request->id);
+            flash()->addError('Erreur! Echec de création de Priorité');
+            return to_route('priorite_create');
         }
 
     }
@@ -47,16 +48,29 @@ class PrioriteController extends Controller
         if(Priorite::where('id',$request->id)->update([
             'libelle'=>$request->libelle,
         ])){
-            
-            return to_route('options',[],201);
+            flash()->addSuccess('Sucèss! Priorité modifiée avec sucèss');
+            return to_route('options');
         } else {
+            flash()->addError('Oops! Erreur de modifications');
             return to_route('priorite_edit',$request->id);
         }
     }
 
     public function delete(int $id){
-        Priorite::destroy($id);
-        return to_route('options');
+        try {
+            Priorite::destroy($id);
+            flash()->addSuccess('Sucèss! Priorité supprimée avec sucèss');
+            return to_route('options');
+        } catch (\Throwable $th) {
+            flash()->options([
+                'timeout' => 10000, // 3 seconds
+                'position' => 'top-center',
+                ])->addError('Erreur! Vous ne pouvez pas supprimer cette Priotité
+                         car d\'autre entités dépendent de lui. Vous devez supprimez toutes 
+                         les entités qui dépendent de cette Priotité avant de le supprimer');
+            
+                return to_route('options');
+        }
     }
     
 }

@@ -26,9 +26,10 @@ class ServiceController extends Controller
             'libelle'=>$request->libelle,
             'email'=>$request->email,
         ])){
-            
-            return to_route('options',[],201);
+            flash()->addSuccess("Service créé avec sucèss");
+            return to_route('options');
         } else {
+            flash()->addError('Erreur! Echec de création du service');
             return to_route('service_create',$request->id);
         }
 
@@ -53,16 +54,28 @@ class ServiceController extends Controller
             'libelle'=>$request->libelle,
             'email'=>$request->email,
         ])){
-            
-            return to_route('options',[],201);
+            flash()->addSuccess('Sucèss! Service modifié avec sucèss');
+            return to_route('options');
         } else {
+            flash()->addError('Oops! Erreur de modifications');
             return to_route('service_edit',$request->id);
         }
     }
 
     public function delete(int $id){
-        Service::destroy($id);
-        return to_route('options');
+        try {
+            Service::destroy($id);
+            flash()->addSuccess('Sucèss! Service supprimé avec sucèss');
+            return to_route('options');
+        } catch (\Throwable $th) {
+            flash()->options([
+                'timeout' => 10000, // 3 seconds
+                'position' => 'top-center',
+                ])->addError('Erreur! Vous ne pouvez pas supprimer ce Service
+                         car d\'autre entités dépendent de lui. Vous devez supprimez toutes 
+                         les entités qui dépendent de ce Service avant de le supprimer');
+            return to_route('options');
+        }
     }
 
 }

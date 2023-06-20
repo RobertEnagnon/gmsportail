@@ -56,8 +56,10 @@ class EmployeController extends Controller
             'societe_id'=>$request->societe_id,
             'date'=>Carbon::parse($request->date)
         ])) {
+            flash()->addSuccess("Employé créé avec sucèss");
             return to_route('employes');
         } else {
+            flash()->addError('Erreur! Echec de création de l\'Employé');
             return to_route('employe_create');
         }
         
@@ -98,15 +100,28 @@ class EmployeController extends Controller
             'client_id'=>$request->client_id,
             'societe_id'=>$request->societe_id,
         ])) {
+            flash()->addSuccess('Sucèss! Employé modifié avec sucèss');
             return to_route('employes');
         } else {
-            return to_route('employe_edit');
+            flash()->addError('Oops! Erreur de modifications');
+            return to_route('employe_edit',$request->id);
         }
     }
 
     public function delete(int $id){
-        Employe::destroy($id);
-
-        return to_route('employes');
+        try {
+            Employe::destroy($id);
+            flash()->addSuccess('Sucèss! Employé supprimé avec sucèss');
+            return to_route('employes');
+        } catch (\Throwable $th) {
+            flash()->options([
+                'timeout' => 10000, // 3 seconds
+                'position' => 'top-center',
+                ])->addError('Erreur! Vous ne pouvez pas supprimer cet Employé
+                         car d\'autre entités dépendent de lui. Vous devez supprimez toutes 
+                         les entités qui dépendent de ce Employé avant de le supprimer');
+            
+                         return to_route('employes');
+        }
     }
 }

@@ -63,8 +63,10 @@ class ClientController extends Controller
             'gms_affaire_id' => $request->gms_affaire_id,
             'mg_affaire_id' => $request->mg_affaire_id
         ])) {
+            flash()->addSuccess('Sucèss! Client enrégistré avec sucèss');
             return to_route('clients');
         } else {
+            flash()->addError('Oops! Erreur d\'enregistrement');
             return to_route('client_create');
         }
         
@@ -117,17 +119,31 @@ class ClientController extends Controller
             'mg_affaire_id' => $request->mg_affaire_id
         ]))
         {
-            
-            return to_route('clients',[],201);
+            flash()->addSuccess('Sucèss! Client modifié avec sucèss');   
+            return to_route('clients');
         } else {
+            flash()->addError('Oops! Erreur lors de modification');
             return to_route('client_edit',$request->id);
         }
     }
 
     public function delete(int $id){
     
-        Client::destroy($id);
-        return to_route('clients');
+        try {
+            Client::destroy($id);
+            flash()->addSuccess('Sucèss! Client Supprimé');
+            return to_route('clients');
+        } catch (\Throwable $th) {
+            flash()->options([
+                'timeout' => 10000, // 3 seconds
+                'position' => 'top-center',
+                ])->addError('Erreur! Vous ne pouvez pas supprimer ce client
+                         car d\'autre entités dépendent de lui. Vous devez supprimez toutes 
+                         les entités qui dépendent de ce client avant de le supprimer');
+            
+                         return to_route('clients');
+        }
+        
     }
 
 

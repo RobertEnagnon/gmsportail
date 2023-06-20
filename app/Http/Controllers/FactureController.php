@@ -63,8 +63,10 @@ class FactureController extends Controller
             'societe_id'=>$request->societe_id,
             'date'=>Carbon::parse($request->date)
         ])) {
+            flash()->addSuccess("Facture créée avec sucèss");
             return to_route('factures');
         } else {
+            flash()->addError('Erreur! Echec de création de la Facture');
             return to_route('facture_create');
         }
         
@@ -112,17 +114,30 @@ class FactureController extends Controller
             'societe_id'=>$request->societe_id,
             'date'=>Carbon::parse($request->date)
         ])) {
-            
+            flash()->addSuccess('Sucèss! Facture modifiée avec sucèss');
             return to_route('factures',[],201);
         } else {
+            flash()->addError('Oops! Erreur de modifications');
             return to_route('facture_edit',$request->id);
         }
         
     }
 
     public function delete(int $id){
-        Facture::destroy($id);
-        return to_route('factures');
+        try {
+            Facture::destroy($id);
+            flash()->addSuccess('Sucèss! Facture supprimé avec sucèss');
+            return to_route('factures');
+        } catch (\Throwable $th) {
+            flash()->options([
+                'timeout' => 10000, // 3 seconds
+                'position' => 'top-center',
+                ])->addError('Erreur! Vous ne pouvez pas supprimer cette Facture
+                         car d\'autre entités dépendent de lui. Vous devez supprimez toutes 
+                         les entités qui dépendent de cette Facture avant de le supprimer');
+            
+            return to_route('factures');
+        }
     }
 
 }

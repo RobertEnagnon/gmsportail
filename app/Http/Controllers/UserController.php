@@ -31,7 +31,7 @@ class UserController extends Controller
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-
+            flash()->addSuccess("Vous êtes connecté avec sucèss");
             return redirect()->intended('/admin');
         }
 
@@ -48,7 +48,7 @@ class UserController extends Controller
 
         $request->session()->regenerateToken();
  
-        
+        flash()->addSuccess("Vous êtes déconnecté avec sucèss");
         return redirect('/');
     }
 
@@ -89,7 +89,7 @@ class UserController extends Controller
 
         if ($user) {
             Auth::login($user);
-
+            flash()->addSuccess("ompte enrégistré avec sucèss");
             return redirect(RouteServiceProvider::HOME);
         }
 

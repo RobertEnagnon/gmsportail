@@ -23,9 +23,10 @@ class TypeDocumentController extends Controller
         if(TypeDocument::create([
             'libelle'=>$request->libelle
         ])){
-            
-            return to_route('options',[],201);
+            flash()->addSuccess("Type du Document créé avec sucèss");
+            return to_route('options');
         } else {
+            flash()->addError('Erreur! Echec de création du type document');
             return to_route('type_document_store',$request->id);
         }
 
@@ -48,16 +49,29 @@ class TypeDocumentController extends Controller
         if(TypeDocument::where('id',$request->id)->update([
             'libelle'=>$request->libelle,
         ])){
-            
+            flash()->addSuccess('Sucèss! Type du Document modifié avec sucèss');
             return to_route('options',[],201);
         } else {
+            flash()->addError('Oops! Erreur de modifications');
             return to_route('type_document_edit',$request->id);
         }
     }
 
     public function delete(int $id){
-        TypeDocument::destroy($id);
-        return to_route('options');
+        try {
+            TypeDocument::destroy($id);
+            flash()->addSuccess('Sucèss! Type du Document supprimé avec sucèss');
+            return to_route('options');
+        } catch (\Throwable $th) {
+            flash()->options([
+                'timeout' => 10000, // 3 seconds
+                'position' => 'top-center',
+                ])->addError('Erreur! Vous ne pouvez pas supprimer ce Type du Document
+                         car d\'autre entités dépendent de lui. Vous devez supprimez toutes 
+                         les entités qui dépendent de ce Type du Document avant de le supprimer');
+            
+                return to_route('options');
+        }
     }
     
 }
