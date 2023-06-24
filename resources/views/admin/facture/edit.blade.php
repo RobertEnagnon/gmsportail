@@ -86,6 +86,9 @@
                                     <label class="custom-file-label" for="file">Choisir un fichier</label>
                                 </div>
                             </div>
+                            @error('fichier')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="card-footer">

@@ -20,6 +20,9 @@
                         <div class="form-group">
                             <label for="libelle">Libellé</label>
                             <input type="text" class="form-control" id="libelle" name="libelle" placeholder="Libelle">
+                            @error('libelle')
+                                        <div class="text-danger">{{$message}}</div>
+                                    @enderror
                         </div>
                         <div class="form-group">
                             <label for="client">Client</label>
@@ -30,6 +33,9 @@
                                     <option value="{{$client->id}}">{{$client->nom}}</option>
                                 @endforeach
                             </select>
+                            @error('client_id')
+                                        <div class="text-danger">{{$message}}</div>
+                                    @enderror
                         </div>
                        
                         <div class="form-group">
@@ -39,6 +45,9 @@
                                     <option value="{{$entite->id}}">{{$entite->libelle}}</option>
                                 @endforeach
                             </select>
+                            @error('societe_id')
+                                        <div class="text-danger">{{$message}}</div>
+                                    @enderror
                         </div>
                     </div>
                     <div class="card-footer">

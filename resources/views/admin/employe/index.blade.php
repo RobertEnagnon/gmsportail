@@ -50,7 +50,7 @@
                         <td>{{$employe->societe->libelle}}</td>
                         <td>{{date('d/m/Y',strtotime($employe->date))}}</td>
                         <td class="d-flex">
-                          <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                          <a href="{{route('employe_show',$employe->id)}}" class="btn btn-info"><i class="fas fa-eye"></i></a>
                           <a class="btn btn-outline-dark btn-sm m-1" href="{{route('employe_edit',$employe->id)}}">
                             <i class="fas fa-edit"></i> Edit
                           </a>

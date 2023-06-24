@@ -41,7 +41,7 @@
                         <td>{{$facture->societe->libelle}}</td>
                         <td>{{date('d/m/Y',strtotime($facture->date))}}</td>
                         <td class="d-flex">
-                          <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                          <a href="{{route('facture_show',$facture->id)}}" class="btn btn-info"><i class="fas fa-eye"></i></a>
                           <a class="btn btn-outline-dark btn-sm m-1" href="{{route('facture_edit',$facture->id)}}">
                             <i class="fas fa-edit"></i> Edit
                           </a>

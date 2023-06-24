@@ -44,7 +44,7 @@
                         <td>{{$document->societe->libelle}}</td>
                         <td>{{date('d/m/Y',strtotime($document->date))}}</td>
                         <td class="d-flex">
-                          <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                          <a href="{{route('document_show', $document->id)}}" class="btn btn-info"><i class="fas fa-eye"></i></a>
                           <a class="btn btn-outline-dark btn-sm m-1" href="{{route('document_edit',$document->id)}}">
                             <i class="fas fa-edit"></i> Edit
                           </a>
@@ -80,6 +80,23 @@
     </div>
     <!-- /.col -->
   </div>
+
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Suppression du document</h5>
+          <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">Voulez vous vraiment supprimer le document ?'</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="non" data-mdb-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" id="oui">OUI</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 @endsection
 
 @section('js')

@@ -18,8 +18,7 @@ class DocumentController extends Controller
     }
 
     public function show(Document $document){
-        dd($document);
-        return $document;
+        return view('admin.document.show', compact('document'));
     }
 
     public function create(){
@@ -40,7 +39,13 @@ class DocumentController extends Controller
             'client_id'=>'required',
             'societe_id'=>'required',
             'date'=>'required|date',
-        ]);
+        ],[
+            'libelle'=>'Le champs du libellé est requis',
+            'fichier'=>'Le champs du fichier est requis',
+            'type_id'=>'Le champs du type est requis',
+            'client_id'=>'Le champs du client est requis',
+            'societe_id'=>'Le champs de l\'entité est requis',
+            'date'=>'Le champs du date est requis',]);
         // Obtenir le nom complet du fichier
         $completeFileName = $request->file('fichier')->getClientOriginalName();
         // obtenir uniquement le nom du fichhier

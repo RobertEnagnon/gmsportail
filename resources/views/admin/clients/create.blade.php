@@ -34,11 +34,17 @@
                         <div class="form-group">
                             <label for="code">code</label>
                             <input type="text" class="form-control" id="code" name="code" placeholder="code">
+                            @error('code')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         
                         <div class="form-group">
                             <label for="nom">Nom</label>
                             <input type="text" class="form-control" id="nom" name="nom" placeholder="nom">
+                            @error('nom')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         
                         <div class="form-group">
@@ -48,22 +54,35 @@
                                     <input type="file" class="custom-file-input" id="file" name="logo">
                                     <label class="custom-file-label" for="file">Choisir un fichier</label>
                                 </div>
+                               
                             </div>
                             <div>
                                 N.B fichier image (jpeg, png etc)
                             </div>
+                            @error('logo')
+                            <div class="text-danger">{{$message}}</div>
+                        @enderror
                         </div>
                         <div class="form-group">
                             <label for="mi_affaire_mi">Numéro Affaire (MI)</label>
                             <input type="text" class="form-control" id="mi_affaire_mi" name="mi_affaire_id" placeholder="Numéro affaire (omag - Base MI)">
+                            @error('mi_affaire_id')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="mi_affaire_gms">Numéro Affaire (GMS)</label>
                             <input type="text" class="form-control" id="mi_affaire_gms" name="gms_affaire_id" placeholder="Numéro affaire (omag - Base GMS)">
+                            @error('gms_affaire_id')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="mg">Numéro Affaire (MG)</label>
                             <input type="text" class="form-control" id="mg" name="mg_affaire_id" placeholder="Numéro affaire (omag - Base MG)">
+                            @error('mg_affaire_id')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="card-footer">

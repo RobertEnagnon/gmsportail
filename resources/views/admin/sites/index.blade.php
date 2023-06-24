@@ -37,7 +37,7 @@
                         <td>{{$site->client->nom}}</td>
                         <td>{{$site->societe->libelle}}</td>
                         <td class="d-flex">
-                          <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                          <a href="{{route('site_show',$site->id)}}" class="btn btn-info"><i class="fas fa-eye"></i></a>
                           <a class="btn btn-outline-dark btn-sm m-1" href="{{route('site_edit',$site->id)}}">
                             <i class="fas fa-edit"></i> Edit
                           </a>

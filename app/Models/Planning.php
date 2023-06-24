@@ -23,4 +23,12 @@ class Planning extends Model
         'societe_id',
         'couleur'
     ];
+
+    public function client(){
+        return $this->belongsTo(Client::class,'client_id');
+    }
+
+    public function societe(){
+        return $this->belongsTo(Societe::class,'societe_id');
+    }
 }

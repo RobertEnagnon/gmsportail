@@ -19,6 +19,7 @@ class EmployeController extends Controller
 
     public function show(Employe $employe){
 
+        return view('admin.employe.show', compact('employe'));
     }
 
     public function create(){

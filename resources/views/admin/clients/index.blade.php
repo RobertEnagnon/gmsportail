@@ -45,7 +45,7 @@
                             src="{{asset('fichiers/clients/'.$client->logo)}}" alt="logo du client">
                         </td>
                         <td class="d-flex ">
-                          <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                          <a href="{{route('client_show',$client->id)}}" class="btn btn-info"><i class="fas fa-eye"></i></a>
                           <a class="btn btn-outline-dark btn-sm m-1" href="{{route('client_edit',$client->id)}}">
                             <i class="fas fa-edit"></i> Edit
                           </a>

@@ -20,7 +20,7 @@ class TicketController extends Controller
     }
 
     public function show(Ticket $ticket){
-
+        return view('admin.ticket.show', compact('ticket'));
     }
 
     public function create(){

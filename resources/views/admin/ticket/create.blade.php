@@ -43,23 +43,26 @@
                         <div class="form-inline mb-3">
                             <div class="form-group">
                                 <label for="prenom" class="mr-4">Nom</label>
-                                <input type="text" class="form-control m-1" value="{{$user->prenom}}" id="prenom"  name="prenom" disabled>
+                                <input type="text" class="form-control m-1" value="{{Auth::user()->prenom}}" id="prenom"  name="prenom" disabled>
                             </div>
 
                             <div class="form-group">
                                 <label for="email" class="mr-1">Courriel</label>
-                                <input type="email" class="form-control m-1" value="{{$user->email}}" id="email"  name="email" disabled>
+                                <input type="email" class="form-control m-1" value="{{Auth::user()->email}}" id="email"  name="email" disabled>
                             </div>
 
                             <div class="form-group">
                                 <label for="numero" class="mr-1">Numero</label>
-                                <input type="number" class="form-control m-1" id="numero" value="{{$user->id}}" name="user_id" hidden>
-                                <input type="number" class="form-control m-1" id="numero" value="{{$user->id}}" name="user_id" disabled>
+                                <input type="number" class="form-control m-1" id="numero" value="{{Auth::user()->id}}" name="user_id" hidden>
+                                <input type="number" class="form-control m-1" id="numero" value="{{Auth::user()->id}}" name="user_id" disabled>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="titre">Titre du Ticket *</label>
                             <input type="text" class="form-control" id="titre" name="titre" placeholder="titre">
+                            @error('titre')
+                            <div class="text-danger">{{$message}}</div>
+                        @enderror
                         </div>
                        
                         <div class="form-inline mb-3">
@@ -79,6 +82,12 @@
                                     <option value="{{$priorite->id}}">{{$priorite->libelle}}</option>
                                 @endforeach
                             </select>
+                            @error('priorite_id')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
+                            @error('service')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
 
                         <div class="form-group">
@@ -90,6 +99,9 @@
                                     <option value="{{$client->id}}">{{$client->nom}}</option>
                                 @endforeach
                             </select>
+                            @error('client_id')
+                            <div class="text-danger">{{$message}}</div>
+                        @enderror
                         </div>
                         <div class="form-group">
                             <label for="entite">Entité</label>
@@ -110,6 +122,9 @@
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
                             </div>
+                            @error('date')
+                            <div class="text-danger">{{$message}}</div>
+                        @enderror
                         </div>
 
                         <div class="form-group">
@@ -120,11 +135,17 @@
                                     <label class="custom-file-label" for="file">Choisir un fichier</label>
                                 </div>
                             </div>
+                            @error('fichier')
+                            <div class="text-danger">{{$message}}</div>
+                        @enderror
                         </div>
 
                         <div class="form-group">
                             <label for="message">Détail *</label>
                             <textarea name="message" id="message"  rows="10" class="form-control"></textarea>
+                            @error('message')
+                            <div class="text-danger">{{$message}}</div>
+                        @enderror
                         </div>
 
                     </div>

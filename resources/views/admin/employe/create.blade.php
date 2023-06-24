@@ -47,22 +47,37 @@
                         <div class="form-group">
                             <label for="matricule">Matricule</label>
                             <input type="text" class="form-control" id="matricule" name="matricule" placeholder="Matricule">
+                             @error('matricule')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="nom">Nom</label>
                             <input type="text" class="form-control" id="nom" name="nom" placeholder="Nom">
+                             @error('nom')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="prenom">Prenom</label>
                             <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Prenom">
+                             @error('prenom')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="cin">CIN</label>
                             <input type="text" class="form-control" id="cin" name="cin" placeholder="CIN">
+                             @error('cin')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="cnss">CNSS</label>
                             <input type="text" class="form-control" id="cnss" name="cnss" placeholder="CNSS">
+                             @error('cnss')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="site">Site</label>
@@ -73,6 +88,9 @@
                                     <option value="{{$site->id}}">{{$site->libelle}}</option>
                                 @endforeach
                             </select>
+                             @error('site_id')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="client">Client</label>
@@ -83,6 +101,9 @@
                                     <option value="{{$client->id}}">{{$client->nom}}</option>
                                 @endforeach
                             </select>
+                             @error('client_id')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="entite">Entité</label>
@@ -91,6 +112,9 @@
                                     <option value="{{$entite->id}}">{{$entite->libelle}}</option>
                                 @endforeach
                             </select>
+                             @error('societe_id')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         
                         <!-- Date -->
@@ -102,6 +126,9 @@
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
                             </div>
+                             @error('date')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="card-footer">

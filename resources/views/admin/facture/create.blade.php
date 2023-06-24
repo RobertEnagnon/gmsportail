@@ -53,11 +53,17 @@
                                     <option value="{{$client->id}}">{{$client->nom}}</option>
                                 @endforeach
                             </select>
+                            @error('client_id')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         
                         <div class="form-group">
                             <label for="libelle">Libellé</label>
                             <input type="text" class="form-control" id="libelle" name="libelle" placeholder="Libelle">
+                            @error('libelle')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <!-- Date -->
                         <div class="form-group">
@@ -68,6 +74,9 @@
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
                             </div>
+                            @error('date')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="entite">Entité</label>
@@ -76,6 +85,9 @@
                                     <option value="{{$entite->id}}">{{$entite->libelle}}</option>
                                 @endforeach
                             </select>
+                            @error('societe_id')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="file">Fichier</label>
@@ -85,6 +97,9 @@
                                     <label class="custom-file-label" for="file">Choisir un fichier</label>
                                 </div>
                             </div>
+                            @error('fichier')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="card-footer">

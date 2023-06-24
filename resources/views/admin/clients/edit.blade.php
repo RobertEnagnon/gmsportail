@@ -52,6 +52,9 @@
                             <div>
                                 N.B fichier image (jpeg, png etc)
                             </div>
+                            @error('logo')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="mi_affaire_mi">Numéro Affaire (MI)</label>

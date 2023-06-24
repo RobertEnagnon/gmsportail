@@ -5,49 +5,93 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Éditer le planning</div>
+                    <div class="card-header">Editer la tâche</div>
 
                     <div class="card-body">
-                        <form action="{{ route('planning.update', $planning->id) }}" method="POST">
+                        <form action="{{ route('planning.update') }}" method="POST">
                             @csrf
-                            @method('PUT')
+                            @method('put')
                             <div class="form-group">
-                                <label for="libelle">Libellé</label>
-                                <input type="text" class="form-control" id="libelle" name="libelle" value="{{ $planning->libelle }}" required>
+                                <input type="number" value="{{$planning->id}}" class="form-control" id="numero" name="id" hidden  >
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="client">Client <span class="text-danger">*</span></label>
+                                    <select class="form-control" id="client" name="client_id">
+                                        <option value="{{$planning->client_id}}">{{$planning->client->nom}}</option>
+                                        @foreach ($clients as $client)
+                                            <option value="{{$client->id}}">{{$client->nom}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label for="entite">Entité <span class="text-danger">*</span></label>
+                                    <select class="form-control" id="entite" name="societe_id">
+                                        <option value="{{$planning->societe_id}}">{{$planning->societe->libelle}}</option>
+                                        @foreach ($entites as $entite)
+                                            <option value="{{$entite->id}}">{{$entite->libelle}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="detail">Détail</label>
-                                <textarea class="form-control" id="detail" name="detail" rows="3" required>{{ $planning->detail }}</textarea>
+                                <label for="libelle">Titre <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="libelle" name="libelle" value="{{$planning->libelle}}" >
+                            </div>
+                            <div class="form-group">
+                                <label for="detail">Description</label>
+                                <textarea class="form-control" id="detail" name="detail" rows="3" >{{$planning->detail}}</textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="date">Date <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="date" name="date" value="{{$planning->date}}">
+                                </div>
+                                <div class="col">
+                                    <label for="couleur">Couleur</label>
+                                    <input type="color" class="form-control" id="couleur" name="couleur" value="{{$planning->couleur}}">
+                                </div>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="repete" value="{{$planning->repete}}" name="repete" >
+                                <label for="repete" class="form-check-label">Répète</label>
                             </div>
                             <div class="form-group">
                                 <label for="periodicite">Périodicité</label>
-                                <input type="text" class="form-control" id="periodicite" name="periodicite" value="{{ $planning->periodicite }}" required>
+                                <input type="text" class="form-control" id="periodicite" name="periodicite" >
                             </div>
-                            <div class="form-group">
-                                <label for="repete">Répète</label>
-                                <input type="text" class="form-control" id="repete" name="repete" value="{{ $planning->repete }}" required>
+                            
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="reteption" id="reteption1" >
+                                <label for="reteption1">Se termine le</label>
+                                <input type="date" class="form-control" id="se_termine_le" value="{{$planning->se_termine_le}}" name="se_termine_le" >
                             </div>
-                            <div class="form-group">
-                                <label for="se_termine_le">Se termine le</label>
-                                <input type="date" class="form-control" id="se_termine_le" name="se_termine_le" value="{{ $planning->se_termine_le }}" required>
+                            <div class="form-check mb-2">
+                                <input type="radio" class="form-check-input" name="reteption" id="reteption2">
+                                <label for="reteption2">Se termine après</label>
+                                <div class="d-flex justify-content-between">
+                                    <input type="number" class="form-control"value="{{$planning->se_termine_apres}}" id="se_termine_apres" name="se_termine_apres" >
+                                    <input type="text" class="form-control" value="Occurences" disabled>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="se_termine_apres">Se termine après</label>
-                                <input type="text" class="form-control" id="se_termine_apres" name="se_termine_apres" value="{{ $planning->se_termine_apres }}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="date">Date</label>
-                                <input type="date" class="form-control" id="date" name="date" value="{{ $planning->date }}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="couleur">Couleur</label>
-                                <input type="color" class="form-control" id="couleur" name="couleur" value="{{ $planning->couleur }}" required>
-                            </div>
+                            
                             <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                            <a href="{{route('planning.index')}}" class="btn btn-info">Annuler</a>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('js')
+<script src="https://cdn.tiny.cloud/1/ix8b72cwx40l8ynsz2d4t2hra6pq2tlsaiodp7b8uhowd28x/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+   tinymce.init({
+     selector: 'textarea#detail', // Replace this CSS selector to match the placeholder element for TinyMCE
+     plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+      toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+   });
+</script>
 @endsection

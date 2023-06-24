@@ -10,7 +10,7 @@
 
 </head>
 <body>
-    <div class="container">
+    <div class="container mt-5">
         <h1 class="text-center">S'inscrire</h1>
         @if ($errors->any())
             <div class="text-center">

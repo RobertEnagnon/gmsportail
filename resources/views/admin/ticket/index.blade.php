@@ -44,7 +44,7 @@
                         <td>{{$ticket->priorite->libelle}}</td>
                         <td>{{$ticket->societe->libelle}}</td>
                         <td class="d-flex">
-                          <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                          <a href="{{route('ticket_show',$ticket->id)}}" class="btn btn-info"><i class="fas fa-eye"></i></a>
                           <a class="btn btn-outline-dark btn-sm m-1" href="{{route('ticket_edit',$ticket->id)}}">
                             <i class="fas fa-edit"></i> Edit
                           </a>

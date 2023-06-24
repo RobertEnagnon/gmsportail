@@ -36,7 +36,6 @@
                 <div class="card-header">
                   <h3 class="card-title">Nouveau Document</h3>
                 </div>
-
                 <form method="POST" action="{{route('document_store')}}"  enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
@@ -53,6 +52,9 @@
                                     <option value="{{$client->id}}">{{$client->nom}}</option>
                                 @endforeach
                             </select>
+                            @error('client_id')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="type_doc">Type Document</label>
@@ -61,20 +63,29 @@
                                     <option value="{{$type->id}}">{{$type->libelle}}</option>
                                 @endforeach
                             </select>
+                            @error('type_id')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="libelle">Libellé</label>
-                            <input type="text" class="form-control" id="libelle" name="libelle" placeholder="Libelle">
+                            <input type="text" class="form-control" id="libelle" value="{{old('libelle')}}" name="libelle" placeholder="Libelle">
+                            @error('libelle')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <!-- Date -->
                         <div class="form-group">
                             <label>Date:</label>
                             <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate" name="date"/>
+                                <input type="text" value="{{old('date')}}" class="form-control datetimepicker-input" data-target="#reservationdate" name="date"/>
                                 <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
                             </div>
+                            @error('date')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="entite">Entité</label>
@@ -83,15 +94,21 @@
                                     <option value="{{$entite->id}}">{{$entite->libelle}}</option>
                                 @endforeach
                             </select>
+                            @error('societe_id')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="file">Fichier</label>
                             <div class="input-group">
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="file" name="fichier">
+                                    <input type="file" value="{{old('fichier')}}" class="custom-file-input" id="file" name="fichier">
                                     <label class="custom-file-label" for="file">Choisir un fichier</label>
                                 </div>
                             </div>
+                            @error('fichier')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="card-footer">

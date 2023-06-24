@@ -20,6 +20,9 @@
                         <div class="form-group">
                             <label for="libelle">Libellé</label>
                             <input type="text" class="form-control" id="libelle" name="libelle" placeholder="Libelle">
+                            @error('libelle')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="card-footer">

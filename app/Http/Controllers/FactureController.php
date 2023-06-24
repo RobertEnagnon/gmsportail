@@ -17,7 +17,7 @@ class FactureController extends Controller
     }
 
     public function show(Facture $facture){
-
+        return view('admin.facture.show', compact('facture'));
     }
 
     public function create(){

@@ -16,7 +16,7 @@ class SiteController extends Controller
     }
 
     public function show(Site $site){
-
+        return view('admin.sites.show',compact('site'));
     }
 
     public function create(){
