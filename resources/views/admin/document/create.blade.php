@@ -41,7 +41,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="numero">Numero</label>
-                            <input type="Number" class="form-control" id="numero" value="{{$latest->id+1}}" name="numero" disabled>
+                            <input type="Number" class="form-control" id="numero" value="{{$latest ? $latest->id+1 : 1}}" name="numero" disabled>
                         </div>
                         <div class="form-group">
                             <label for="client">Client</label>

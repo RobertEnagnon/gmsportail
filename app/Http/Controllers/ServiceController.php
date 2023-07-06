@@ -55,10 +55,10 @@ class ServiceController extends Controller
             'email'=>$request->email,
         ])){
             flash()->addSuccess('Sucèss! Service modifié avec sucèss');
-            return to_route('options');
+            return redirect()->route('options');
         } else {
             flash()->addError('Oops! Erreur de modifications');
-            return to_route('service_edit',$request->id);
+            return redirect()->route('service_edit',$request->id);
         }
     }
 
@@ -74,7 +74,7 @@ class ServiceController extends Controller
                 ])->addError('Erreur! Vous ne pouvez pas supprimer ce Service
                          car d\'autre entités dépendent de lui. Vous devez supprimez toutes 
                          les entités qui dépendent de ce Service avant de le supprimer');
-            return to_route('options');
+            return redirect()->route('options');
         }
     }
 

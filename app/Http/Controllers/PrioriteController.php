@@ -69,7 +69,7 @@ class PrioriteController extends Controller
                          car d\'autre entités dépendent de lui. Vous devez supprimez toutes 
                          les entités qui dépendent de cette Priotité avant de le supprimer');
             
-                return to_route('options');
+                return redirect()->route('options');
         }
     }
     

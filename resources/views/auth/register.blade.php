@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">S'inscrire</h1>
+        <h1 class="text-center">Créer un utilisateur</h1>
         @if ($errors->any())
             <div class="text-center">
                 <div>
@@ -59,8 +59,9 @@
                   @endforeach
                 </select>
             </div>
-            <p>Vous-avez déjà un compte? <a href="/login">connectez-vous</a></p>
-            <button type="submit" class="btn btn-primary mt-3">S'inscrire</button>
+            {{-- <p>Vous-avez déjà un compte? <a href="/login">connectez-vous</a></p> --}}
+            <button type="submit" class="btn btn-primary mt-3">Soumettre</button>
+            <a href="{{route('users')}}" class="btn btn-info mt-3">Retour</a>
         </form>
     </div>
 

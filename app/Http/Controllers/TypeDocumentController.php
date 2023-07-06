@@ -50,10 +50,10 @@ class TypeDocumentController extends Controller
             'libelle'=>$request->libelle,
         ])){
             flash()->addSuccess('Sucèss! Type du Document modifié avec sucèss');
-            return to_route('options',[],201);
+            return redirect()->route('options',[],201);
         } else {
             flash()->addError('Oops! Erreur de modifications');
-            return to_route('type_document_edit',$request->id);
+            return redirect()->route('type_document_edit',$request->id);
         }
     }
 
@@ -70,7 +70,7 @@ class TypeDocumentController extends Controller
                          car d\'autre entités dépendent de lui. Vous devez supprimez toutes 
                          les entités qui dépendent de ce Type du Document avant de le supprimer');
             
-                return to_route('options');
+                return redirect()->route('options');
         }
     }
     

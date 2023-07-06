@@ -19,7 +19,7 @@
                     <p class="text-center mx-auto"> {!! $ticket->message!!}</p>
                 </div>
                 <div class="card-footer bg-transparent border-success">
-                    <a class="h5 text-primary" href="{{asset('/fichiers/tickets/'.$ticket->nom_fichier)}}" target="_blank">Lire le ticket</a>
+                    <a class="h5 text-primary" href="{{asset('/fichiers/tickets/'.$ticket->fichier)}}" target="_blank">Lire le ticket</a>
                     <a href="{{route('tickets')}}" class="h5 btn btn-outline-info ml-5">Retour</a>
                 </div>
             </div>

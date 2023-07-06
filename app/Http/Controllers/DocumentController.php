@@ -8,20 +8,30 @@ use App\Models\Societe;
 use App\Models\TypeDocument;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
     public function index(){
-        $documents = Document::all();
+        $documents = null ;
+
+            if (Auth::user()->is_admin) {
+                $documents = Document::all();
+            } else {
+                $documents = Document::where('client_id',Auth::user()->client_id)->get();
+            }
+        
+        
         return view('admin.document.index',compact('documents'));
     }
 
     public function show(Document $document){
+        $this->authorize('view', $document);
         return view('admin.document.show', compact('document'));
     }
 
     public function create(){
+        // $this->authorize('create', Document::class);
         $clients = Client::all(['id','nom']);
         $entites = Societe::all(['id','libelle']);
         $types = TypeDocument::all(['id','libelle']);
@@ -31,6 +41,8 @@ class DocumentController extends Controller
         return view('admin.document.create', compact('clients','entites','types','latest'));
     }
     public function store(Request $request){
+
+        $this->authorize('create', Document::class);
 
         $validate = $this->validate($request,[
             'libelle'=>'required|string',
@@ -95,7 +107,6 @@ class DocumentController extends Controller
     public function update(Request $request){
 
 
-
         $this->validate($request,[
             'id'=>'required',
             'libelle'=>'required|string',
@@ -140,10 +151,12 @@ class DocumentController extends Controller
         }
     }
 
-    public function delete(int $id){
+    public function delete(Document $document){
        
+        $this->authorize('update',$document);
        try {
-        Document::destroy($id);
+        // Document::destroy($id);
+        $document->delete();
         flash()->addSuccess('Sucèss! Document supprimé avec sucèss');
         return to_route('documents');
        } catch (\Throwable $th) {
@@ -154,7 +167,7 @@ class DocumentController extends Controller
                      car d\'autre entités dépendent de lui. Vous devez supprimez toutes 
                      les entités qui dépendent de ce Document avant de le supprimer');
         
-            return to_route('documents');
+            return redirect()->route('documents');
        }
 
         

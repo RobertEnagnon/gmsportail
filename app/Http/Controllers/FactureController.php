@@ -7,20 +7,31 @@ use App\Models\Facture;
 use App\Models\Societe;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FactureController extends Controller
 {
     public function index(){
-        $factures = Facture::all();
-        // dd($clients);
+        $factures = null;
+
+        if (Auth::user()->is_admin) {
+
+            $factures = Facture::all();
+
+        } else {
+            $factures = Facture::where('client_id',Auth::user()->client_id)->get();
+        }
+        
         return view('admin.facture.index', compact('factures'));
     }
 
     public function show(Facture $facture){
+        $this->authorize('view', $facture);
         return view('admin.facture.show', compact('facture'));
     }
 
     public function create(){
+        $this->authorize('create', Facture::class);
         $clients = Client::all(['id','nom']);
         $entites = Societe::all(['id','libelle']);
         $latest = Facture::latest('id')->first(['id']);
@@ -74,6 +85,8 @@ class FactureController extends Controller
 
     public function edit(Facture $facture){
 
+        $this->authorize('update', $facture);
+
         $clients = Client::all(['id','nom']);
         $entites = Societe::all(['id','libelle']);
 
@@ -123,9 +136,11 @@ class FactureController extends Controller
         
     }
 
-    public function delete(int $id){
+    public function delete(Facture $facture){
+        $this->authorize('create', Facture::class);
         try {
-            Facture::destroy($id);
+            // Facture::destroy($id);
+            $facture->delete();
             flash()->addSuccess('Sucèss! Facture supprimé avec sucèss');
             return to_route('factures');
         } catch (\Throwable $th) {

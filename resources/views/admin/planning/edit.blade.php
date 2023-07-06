@@ -1,5 +1,15 @@
 @extends('admin.layout')
 
+@section('css')
+    <style>
+        #repeateContainer{
+            visibility: hidden;
+            height: 0;
+            transition: all 0.4s ease;
+        }
+    </style>
+@endsection
+
 @section('main')
     <div class="container">
         <div class="row justify-content-center">
@@ -52,28 +62,39 @@
                                     <input type="color" class="form-control" id="couleur" name="couleur" value="{{$planning->couleur}}">
                                 </div>
                             </div>
-                            <div class="form-check">
+                            <div class="form-check mt-2">
                                 <input type="checkbox" class="form-check-input" id="repete" value="{{$planning->repete}}" name="repete" >
                                 <label for="repete" class="form-check-label">Répète</label>
                             </div>
-                            <div class="form-group">
-                                <label for="periodicite">Périodicité</label>
-                                <input type="text" class="form-control" id="periodicite" name="periodicite" >
-                            </div>
-                            
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="reteption" id="reteption1" >
-                                <label for="reteption1">Se termine le</label>
-                                <input type="date" class="form-control" id="se_termine_le" value="{{$planning->se_termine_le}}" name="se_termine_le" >
-                            </div>
-                            <div class="form-check mb-2">
-                                <input type="radio" class="form-check-input" name="reteption" id="reteption2">
-                                <label for="reteption2">Se termine après</label>
-                                <div class="d-flex justify-content-between">
-                                    <input type="number" class="form-control"value="{{$planning->se_termine_apres}}" id="se_termine_apres" name="se_termine_apres" >
-                                    <input type="text" class="form-control" value="Occurences" disabled>
+                           <div id="repeateContainer" class="my-4">
+                                <div class="form-group">
+                                    <label for="periodicite">Périodicité</label>
+                                    <div class="form-control">
+                                        <span class="col-2">1 </span>
+                                        <select name="periodicite" id="periodicite" class="col-10" style="border: none; outline: none" >
+                                            <option value="{{$planning->periodicite}}">{{$planning->periodicite}}</option>
+                                            <option value="jour">jour</option>
+                                            <option value="semaine">semaine</option>
+                                            <option value="mois">mois</option>
+                                            <option value="an">an</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                                
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="reteption" id="reteption1" >
+                                    <label for="reteption1">Se termine le</label>
+                                    <input type="date" class="form-control" id="se_termine_le" value="{{$planning->se_termine_le}}" name="se_termine_le" disabled >
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input type="radio" class="form-check-input" name="reteption" id="reteption2">
+                                    <label for="reteption2">Se termine après</label>
+                                    <div class="d-flex justify-content-between">
+                                        <input type="number" class="form-control"value="{{$planning->se_termine_apres}}" id="se_termine_apres" name="se_termine_apres" disabled >
+                                        <input type="text" class="form-control" value="Occurences" disabled>
+                                    </div>
+                                </div>
+                           </div>
                             
                             <button type="submit" class="btn btn-primary">Mettre à jour</button>
                             <a href="{{route('planning.index')}}" class="btn btn-info">Annuler</a>
@@ -94,4 +115,5 @@
       toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
    });
 </script>
+<script src="{{asset('js/admin/planning.js')}}"></script>
 @endsection

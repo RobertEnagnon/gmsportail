@@ -19,7 +19,9 @@
         <div class="card-body">
 
           <table id="example1" class="table table-bordered table-striped">
+            @can('create', App\Models\Ticket::class)
             <a href="{{route('ticket_create')}}" class="btn btn-primary">Créer un nouveau</a>
+            @endcan
             <thead>
             <tr>
               <th>N°</th>
@@ -43,11 +45,14 @@
                         <td>{{$ticket->service->libelle}}</td>
                         <td>{{$ticket->priorite->libelle}}</td>
                         <td>{{$ticket->societe->libelle}}</td>
-                        <td class="d-flex">
+                        <td class="d-flex align-items-center">
                           <a href="{{route('ticket_show',$ticket->id)}}" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                          @can('update', $ticket)
                           <a class="btn btn-outline-dark btn-sm m-1" href="{{route('ticket_edit',$ticket->id)}}">
                             <i class="fas fa-edit"></i> Edit
                           </a>
+                          @endcan
+                          @can('delete', $ticket)
                           <form action="{{route('ticket_delete',$ticket->id)}}" method="post">
                             @csrf
                             @method('delete')
@@ -55,6 +60,7 @@
                               <i class="fas fa-trash"></i> 
                             </button>
                           </form>
+                          @endcan
                         </td>
                     </tr>
                 @endforeach

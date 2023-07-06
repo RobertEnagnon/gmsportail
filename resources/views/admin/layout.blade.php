@@ -81,7 +81,7 @@
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             <span class="dropdown-header bg-info h1" style="font-size: px">{{Auth::user()->prenom}}</span>
             <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">
+            <a href="/user" class="dropdown-item">
               <i class="fas fa-user mr-2"></i>Mon profile
             </a>
             <a href="#" class="dropdown-item">
@@ -148,48 +148,51 @@
                 </p>
               </a>
             </li>
-            <li class="nav-item">
-              <a href="{{route('clients')}}" class="nav-link">
-                <i class="nav-icon fas fa-handshake"></i>
-                <p>
-                  Clients
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{{route('sites')}}" class="nav-link">
-                <i class="nav-icon fas fa-shield-alt"></i> 
-                <p>
-                  Sites
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{{route('employes')}}" class="nav-link">
-                <i class="nav-icon fas fa-users"></i>
-                <p>
-                  Employés
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="/users" class="nav-link">
-                <i class="nav-icon fas fa-user-alt"></i>
-                <p>
-                  Utilisateurs
-                </p>
-              </a>
-            </li>
+            @if (Auth::user()->is_admin)
+              <li class="nav-item">
+                <a href="{{route('clients')}}" class="nav-link">
+                  <i class="nav-icon fas fa-handshake"></i>
+                  <p>
+                    Clients
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('sites')}}" class="nav-link">
+                  <i class="nav-icon fas fa-shield-alt"></i> 
+                  <p>
+                    Sites
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('employes')}}" class="nav-link">
+                  <i class="nav-icon fas fa-users"></i>
+                  <p>
+                    Employés
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/users" class="nav-link">
+                  <i class="nav-icon fas fa-user-alt"></i>
+                  <p>
+                    Utilisateurs
+                  </p>
+                </a>
+              </li>
 
-            <li class="nav-item">
-              <a href="{{route('options')}}" class="nav-link">
-                <i class="nav-icon fa fa-cogs fa-fw" aria-hidden="true"></i>
-                <p>
-                  Options
-                  {{-- <span class="right badge badge-danger">New</span> --}}
-                </p>
-              </a>
-            </li>
+              <li class="nav-item">
+                <a href="{{route('options')}}" class="nav-link">
+                  <i class="nav-icon fa fa-cogs fa-fw" aria-hidden="true"></i>
+                  <p>
+                    Options
+                    {{-- <span class="right badge badge-danger">New</span> --}}
+                  </p>
+                </a>
+              </li>
+            @endif
+            
           </ul>
         </nav>
         <!-- /.sidebar-menu -->

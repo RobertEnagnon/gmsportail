@@ -24,7 +24,8 @@ class User extends Authenticatable
         'password',
         'client_id',
         'is_client',
-        'derniere_con'
+        'derniere_con',
+        'is_admin'
     ];
 
     /**
@@ -46,4 +47,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function client(){
+        return $this->belongsTo(Client::class,'client_id');
+    }
 }

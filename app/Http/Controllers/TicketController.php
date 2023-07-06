@@ -10,20 +10,32 @@ use App\Models\Ticket;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
     
     public function index(){
-        $tickets = Ticket::all();
+        $tickets = null;
+
+        if (Auth::user()->is_admin) {
+
+            $tickets = Ticket::all();
+
+        } else {
+            $tickets = Ticket::where('client_id',Auth::user()->client_id)->get();
+        }
+        
         return view('admin.ticket.index', compact('tickets'));
     }
 
     public function show(Ticket $ticket){
+        $this->authorize('view',$ticket);
         return view('admin.ticket.show', compact('ticket'));
     }
 
     public function create(){
+        $this->authorize('create', Ticket::class);
         $services = Service::all(['id','libelle']);
         $clients = Client::all(['id','nom']);
         $entites = Societe::all(['id','libelle']);
@@ -92,6 +104,7 @@ class TicketController extends Controller
     }
 
     public function edit(Ticket $ticket){
+        $this->authorize('update',$ticket);
         
         $services = Service::all(['id','libelle']);
         $clients = Client::all(['id','nom']);
@@ -157,9 +170,11 @@ class TicketController extends Controller
         }
     }
 
-    public function delete(int $id){
+    public function delete(Ticket $ticket){
+        $this->authorize('delete',$ticket);
         try {
-            Ticket::destroy($id);
+            // Ticket::destroy($id);
+            $ticket->delete();
             flash()->addSuccess('Sucèss! Ticket supprimé avec sucèss');
             return to_route('tickets');
 

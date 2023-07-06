@@ -18,6 +18,7 @@ class Client extends Model
         'mg_affaire_id',
     ];
 
+   
     
 
     

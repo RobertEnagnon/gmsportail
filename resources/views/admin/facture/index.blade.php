@@ -18,7 +18,9 @@
         <!-- /.card-header -->
         <div class="card-body">
           <table id="example1" class="table table-bordered table-striped">
+            @can('create', App\Models\Facture::class)
             <a href="{{route('facture_create')}}" class="btn btn-primary">Créer un nouveau</a>
+            @endcan
             <thead>
             <tr>
               <th>Numero</th>
@@ -40,11 +42,14 @@
                         <td> {{$facture->client->nom}} </td>
                         <td>{{$facture->societe->libelle}}</td>
                         <td>{{date('d/m/Y',strtotime($facture->date))}}</td>
-                        <td class="d-flex">
+                        <td class="d-flex align-items-center">
                           <a href="{{route('facture_show',$facture->id)}}" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                          @can('update', $facture)
                           <a class="btn btn-outline-dark btn-sm m-1" href="{{route('facture_edit',$facture->id)}}">
                             <i class="fas fa-edit"></i> Edit
                           </a>
+                          @endcan
+                          @can('delete', $facture)
                           <form action="{{route('facture_delete',$facture->id)}}" method="post">
                             @csrf
                             @method('delete')
@@ -52,6 +57,7 @@
                               <i class="fas fa-trash"></i> 
                             </button>
                           </form>
+                          @endcan
                         </td>
                     </tr>
                 @endforeach

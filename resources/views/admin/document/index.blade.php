@@ -19,7 +19,9 @@
         <div class="card-body">
 
           <table id="example1" class="table table-bordered table-striped">
-            <a href="{{route('document_create')}}" class="btn btn-primary">Créer un nouveau</a>
+            @can('create', App\Models\Document::class)
+              <a href="{{route('document_create')}}" class="btn btn-primary">Créer un nouveau</a>
+            @endcan
             <thead>
             <tr>
               <th>N°</th>
@@ -45,9 +47,12 @@
                         <td>{{date('d/m/Y',strtotime($document->date))}}</td>
                         <td class="d-flex">
                           <a href="{{route('document_show', $document->id)}}" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                          @can('update', $document)
                           <a class="btn btn-outline-dark btn-sm m-1" href="{{route('document_edit',$document->id)}}">
                             <i class="fas fa-edit"></i> Edit
                           </a>
+                          @endcan
+                          @can('delete', $document)
                           <form action="{{route('document_delete',$document->id)}}" method="post">
                             @csrf
                             @method('delete')
@@ -55,6 +60,7 @@
                               <i class="fas fa-trash"></i> 
                             </button>
                           </form>
+                          @endcan
                         </td>
                     </tr>
                 @endforeach
@@ -81,21 +87,7 @@
     <!-- /.col -->
   </div>
 
-  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Suppression du document</h5>
-          <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">Voulez vous vraiment supprimer le document ?'</div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="non" data-mdb-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-danger" id="oui">OUI</button>
-        </div>
-      </div>
-    </div>
-  </div>
+
 
 @endsection
 
@@ -120,7 +112,6 @@
     $(function () {
       $("#example1").DataTable({
         "responsive": true, "lengthChange": false, "autoWidth": false,
-        // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
       }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
       
     });

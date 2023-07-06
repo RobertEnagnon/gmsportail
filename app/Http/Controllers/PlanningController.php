@@ -7,20 +7,36 @@ use Illuminate\Http\Request;
 use App\Models\Planning;
 use App\Models\Societe;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class PlanningController extends Controller
 {
     public function index()
     {
-        $clients = Client::all();
-        $entites = Societe::all();
+        $taches= null;
 
-        return view('admin.planning.index', compact('clients','entites'));
+        if (Auth::user()->is_admin) {
+
+            $taches= Planning::all();
+
+        } else {
+            $taches= Planning::where('client_id',Auth::user()->client_id)->get();
+        }
+
+        return view('admin.planning.index', compact('taches'));
     }
 
     public function getEvents()
     {
-        $plannings = Planning::all();
+        $plannings= null;
+
+        if (Auth::user()->is_admin) {
+
+            $plannings= Planning::all();
+
+        } else {
+            $plannings= Planning::where('client_id',Auth::user()->client_id)->get();
+        }
 
         $events = [];
 
@@ -42,13 +58,16 @@ class PlanningController extends Controller
 
     public function create()
     {
+        
         $clients = Client::all();
         $entites = Societe::all();
+
         return view('admin.planning.create', compact('clients','entites'));
     }
 
     public function store(Request $request)
     {
+        $this->authorize('create', Planning::class);
         $request->validate([
             'libelle' => 'required',
             'date' => 'required',
@@ -75,6 +94,7 @@ class PlanningController extends Controller
 
     public function edit(Planning $planning)
     {
+        $this->authorize('update', $planning);
         $clients = Client::all();
         $entites = Societe::all();
 
@@ -105,7 +125,7 @@ class PlanningController extends Controller
         ]))
         {
             flash()->addSuccess('Sucèss! Client modifié avec sucèss');   
-            return to_route('planning.index');
+            return to_route('planning.create');
         } else {
             flash()->addError('Oops! Erreur lors de modification');
             return to_route('planning.edit',$request->id);
@@ -114,11 +134,12 @@ class PlanningController extends Controller
 
     public function destroy(Planning $planning)
     {
+        $this->authorize('delete', $planning);
         try{
             $planning->delete();
             flash()->addSuccess( 'Tâche supprimé avec succès.');
 
-            return redirect()->route('planning.index');
+            return redirect()->route('planning.create');
 
         }catch (\Throwable $th) {
 
@@ -129,7 +150,7 @@ class PlanningController extends Controller
                         car d\'autre entités dépendent d\'elle. Vous devez supprimez toutes 
                         les entités qui dépendent de cette tâche avant de le supprimer');
         
-                        return to_route('planning.index');
+                        return to_route('planning.create');
         }
     }
 }

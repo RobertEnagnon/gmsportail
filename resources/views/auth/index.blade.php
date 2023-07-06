@@ -40,12 +40,12 @@
                         <td> {{$user->email}} </td>
                         <td>{{date('d/m/Y',strtotime($user->derniere_con))}}</td>
                         <td> <input type="checkbox" name="is_client" value="{{1}}" {{$user->is_client?'checked':''}} @disabled(true)> </td>
-                        <td class="d-flex">
-                          <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                          <a class="btn btn-outline-dark btn-sm m-1" href="">
+                        <td class="d-flex align-items-center">
+                          {{-- <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a> --}}
+                          <a class="btn btn-outline-dark btn-sm m-1" href="{{route('user_edit',$user->id)}}">
                             <i class="fas fa-edit"></i> Edit
                           </a>
-                          <form action="" method="post">
+                          <form action="{{route('user_delete',$user->id)}}" method="post">
                             @csrf
                             @method('delete')
                             <button type="submit" class="btn btn-danger btn-sm factSupp" >

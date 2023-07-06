@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">S'inscrire</h1>
+        <h1 class="text-center">Se connecter</h1>
         @if ($errors->any())
             <div class="text-center">
                 <div>
@@ -37,9 +37,10 @@
                 <input type="checkbox" id="remember" name="remember" value="{{1}}" class="form-check-input" >
                 <label class="form-check-label" for="remember">Se souvenir de moi</label>
             </div>
-
-            <p>Vous n'avez pas encore un compte? <a href="/register">inscrivez-vous</a></p>
+            <p> <a href="/recorvery">Mot de passe oublié ?</a></p>
+            {{-- <p>Vous n'avez pas encore un compte? <a href="/register">inscrivez-vous</a></p> --}}
             <button type="submit" class="btn btn-primary mt-3">Se connecter</button>
+            <a class="btn btn-info mt-3" href="/">Accueil</a>
         </form>
     </div>
 

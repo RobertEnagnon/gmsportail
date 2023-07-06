@@ -13,6 +13,7 @@ use App\Http\Controllers\SiteController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TypeDocumentController;
 use App\Http\Controllers\UserController;
+use App\Models\Document;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,14 +32,48 @@ Route::get('/', function () {
 });
 
 
-Route::get('/register', [UserController::class,'create']);
-Route::post('/register', [UserController::class,'store']);
+
 Route::get('/login', [UserController::class,'login'])->name('login');
 Route::post('/connect', [UserController::class,'connect']);
-Route::post('/logout', [UserController::class, 'logout'])
-    ->middleware('auth');
-Route::get('/users', [UserController::class,'index']);
-Route::delete('/users/delete{id}',[UserController::class,'delete']) ;   
+
+Route::get('/recorvery',[UserController::class,'recorveryPassword']);
+Route::post('/forgot',[UserController::class,'forgotPassword']);
+
+Route::get('/reset_form/{token}',[UserController::class,'resetForm']);
+
+Route::put('/reset',[UserController::class,'resetPassword']);
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/register', [UserController::class,'create']);
+    Route::post('/register', [UserController::class,'store']);
+
+    Route::get('/user', [UserController::class,'user'])->name('profile');
+
+    Route::get('/edit_username',[UserController::class,'editUsername']);
+    Route::put('/update_username', [UserController::class,'update_username']);
+
+    Route::get('/edit_email',[UserController::class,'editEmail']);
+    Route::put('/update_email', [UserController::class,'update_email']);
+
+    Route::get('/edit_Password',[UserController::class,'editPassword']);
+    Route::put('/update_password', [UserController::class,'update_password']);
+
+    Route::put('/user_reset',  [UserController::class,'update']);
+    Route::post('/user/photo',  [UserController::class,'storeFile']);
+
+    Route::post('/logout', [UserController::class, 'logout']);
+
+    Route::get('/users', [UserController::class,'index'])->name('users');
+
+    Route::get('/users/edit/{user}',[UserController::class,'edit'])->name('user_edit');
+    Route::put('/users/update',[UserController::class,'update'])->name('user_update');
+
+    Route::delete('/users/delete/{user}',[UserController::class,'delete'])->name('user_delete') ;  
+
+});
+
+ 
 
 
 Route::middleware('auth')->prefix('admin')->group(function(){
@@ -48,11 +83,11 @@ Route::middleware('auth')->prefix('admin')->group(function(){
     Route::prefix('documents')->group(function(){
         Route::get('/',[DocumentController::class,'index'])->name('documents');
         Route::get('/show/{document}',[DocumentController::class,'show'])->name('document_show');
-        Route::get('/create',[DocumentController::class, 'create'])->name('document_create');
+        Route::get('/create',[DocumentController::class, 'create'])->name('document_create')->middleware('can:create,'.Document::class);
         Route::post('/store',[DocumentController::class,'store'])->name('document_store');
-        Route::get('/edit/{document}',[DocumentController::class,'edit'])->name('document_edit');
+        Route::get('/edit/{document}',[DocumentController::class,'edit'])->name('document_edit')->middleware('can:update,document');
         Route::put('/update',[DocumentController::class,'update'])->name('document_update');
-        Route::delete('/delete/{id}',[DocumentController::class,'delete'])->name('document_delete');
+        Route::delete('/delete/{document}',[DocumentController::class,'delete'])->name('document_delete');
 
     });
 
@@ -63,7 +98,7 @@ Route::middleware('auth')->prefix('admin')->group(function(){
         Route::post('/store',[FactureController::class,'store'])->name('facture_store');
         Route::get('/edit/{facture}',[FactureController::class,'edit'])->name('facture_edit');
         Route::put('/update',[FactureController::class,'update'])->name('facture_update');
-        Route::delete('/delete/{id}',[FactureController::class,'delete'])->name('facture_delete');
+        Route::delete('/delete/{facture}',[FactureController::class,'delete'])->name('facture_delete');
     });
 
     Route::prefix('plannings')->group(function(){
@@ -84,7 +119,7 @@ Route::middleware('auth')->prefix('admin')->group(function(){
         Route::post('/store',[TicketController::class,'store'])->name('ticket_store');
         Route::get('/edit/{ticket}',[TicketController::class,'edit'])->name('ticket_edit');
         Route::put('/update',[TicketController::class,'update'])->name('ticket_update');
-        Route::delete('/delete/{id}',[TicketController::class,'delete'])->name('ticket_delete');
+        Route::delete('/delete/{ticket}',[TicketController::class,'delete'])->name('ticket_delete');
     });
 
 
