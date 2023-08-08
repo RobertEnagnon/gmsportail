@@ -18,8 +18,16 @@ class Client extends Model
         'mg_affaire_id',
     ];
 
-   
+    public function user(){
+        return $this->hasOne(User::class);
+    }
     
+    public function sites(){
+        return $this->hasMany(Site::class);
+    }
 
+    public function tickets(){
+        return $this->hasMany(Ticket::class);
+    }
     
 }

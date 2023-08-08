@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Enregistrement</title>
+    <title>Modification</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
@@ -12,15 +12,6 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center">Modifier l'utilisateur</h1>
-        @if ($errors->any())
-            <div class="text-center">
-                <div>
-                    @foreach ($errors->all() as $error)
-                        <p class="text-danger">{{$error}}</p>
-                    @endforeach
-                </div>
-            </div>
-        @endif
 
         <form action="{{route('user_update')}}" method="POST" class="col-md-6 mx-auto">
             @csrf
@@ -31,22 +22,23 @@
             <div class="form-group mb-3">
                 <label class="form-label" for="nom">Nom</label>
                 <input type="text" id="nom" name="nom" value="{{$user->nom}}" class="form-control" autofocus>
+                @error('nom')
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
             </div>
             <div class="form-group mb-3">
                 <label class="form-label" for="prenom">Prenom</label>
                 <input type="text" id="prenom" name="prenom" value="{{$user->prenom}}" class="form-control" >
+                @error('prenom')
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
             </div>
             <div class="form-group mb-3">
                 <label class="form-label" for="email">Email</label>
                 <input type="email" id="email" name="email" value="{{$user->email}}" class="form-control" >
-            </div>
-            <div class="form-group mb-3">
-                <label class="form-label" for="password">Password</label>
-                <input type="password" id="password" name="password" value="{{$user->password}}" class="form-control" >
-            </div>
-            <div class="form-group mb-3">
-                <label class="form-label" for="password_confirmation">Confirmez Password</label>
-                <input type="password_confirmation" id="password_confirmation" name="password_confirmation" value="{{old('password_confirmation')}}" class="form-control" >
+                @error('email')
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
             </div>
             <div class="form-group mb-3">
                 <input type="checkbox" id="is_client" name="is_client" value="{{1}}" {{$user->is_client?'checked':''}} class="form-check-input" >

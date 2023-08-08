@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('nom')->unique();
             $table->string('code');
             $table->string('logo');
-            $table->integer("mi_affaire_id")->unsigned()->index();
-            $table->integer("gms_affaire_id")->unsigned()->index();
-            $table->integer("mg_affaire_id")->unsigned()->index();
+            $table->integer("mi_affaire_id")->nullable();
+            $table->integer("gms_affaire_id")->nullable();
+            $table->integer("mg_affaire_id")->nullable();
             $table->timestamps();
         });
     }

@@ -13,6 +13,6 @@ class DocumentSeeder extends Seeder
      */
     public function run(): void
     {
-        Document::factory(10)->create();
+        Document::factory(3)->create();
     }
 }

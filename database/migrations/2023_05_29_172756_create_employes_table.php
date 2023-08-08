@@ -21,7 +21,6 @@ return new class extends Migration
             $table->unsignedBigInteger('site_id');
             $table->unsignedBigInteger('client_id');
             $table->unsignedBigInteger('societe_id');
-            $table->date('date')->default(null);
 
             $table->foreign('site_id')->references('id')->on('sites')
             ->onDelete('restrict')

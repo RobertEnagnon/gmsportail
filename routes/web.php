@@ -14,6 +14,8 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TypeDocumentController;
 use App\Http\Controllers\UserController;
 use App\Models\Document;
+use App\Models\Employe;
+use App\Models\Site;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,8 +47,8 @@ Route::put('/reset',[UserController::class,'resetPassword']);
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/register', [UserController::class,'create']);
-    Route::post('/register', [UserController::class,'store']);
+    Route::get('/register', [UserController::class,'create'])->name('user.register');
+    Route::post('/register', [UserController::class,'store'])->name('user.store');
 
     Route::get('/user', [UserController::class,'user'])->name('profile');
 
@@ -109,6 +111,8 @@ Route::middleware('auth')->prefix('admin')->group(function(){
         Route::get('/edit/{planning}', [PlanningController::class,'edit'])->name('planning.edit');
         Route::put('/update', [PlanningController::class,'update'])->name('planning.update');
         Route::delete('/destroy/{planning}', [PlanningController::class,'destroy'])->name('planning.destroy');
+        Route::get("/done/{id}",[PlanningController::class,'markAsDone'])->name('planning.done');
+        Route::get("/undone/{id}",[PlanningController::class,'markAsUndone'])->name('planning.undone');
 
     });
 
@@ -120,6 +124,9 @@ Route::middleware('auth')->prefix('admin')->group(function(){
         Route::get('/edit/{ticket}',[TicketController::class,'edit'])->name('ticket_edit');
         Route::put('/update',[TicketController::class,'update'])->name('ticket_update');
         Route::delete('/delete/{ticket}',[TicketController::class,'delete'])->name('ticket_delete');
+
+        Route::get('/replyForm/{ticket}',[TicketController::class,'replyForm'])->name('ticket_replyForm');
+        Route::put('/reply',[TicketController::class,'reply'])->name('ticket_reply');
     });
 
 
@@ -137,21 +144,21 @@ Route::middleware('auth')->prefix('admin')->group(function(){
     Route::prefix('sites')->group(function(){
         Route::get('/',[SiteController::class,'index'])->name('sites');
         Route::get('/show/{site}',[SiteController::class,'show'])->name('site_show');
-        Route::get('/create',[SiteController::class,'create'])->name('site_create');
+        Route::get('/create',[SiteController::class,'create'])->name('site_create')->middleware('can:create,'.Site::class);
         Route::post('/store',[SiteController::class,'store'])->name('site_store');
-        Route::get('/edit/{site}',[SiteController::class,'edit'])->name('site_edit');
+        Route::get('/edit/{site}',[SiteController::class,'edit'])->name('site_edit')->middleware('can:update,site');
         Route::put('/update',[SiteController::class,'update'])->name('site_update');
-        Route::delete('/delete/{id}',[SiteController::class,'delete'])->name('site_delete');
+        Route::delete('/delete/{site}',[SiteController::class,'delete'])->name('site_delete');
     });
 
     Route::prefix('employes')->group(function(){
         Route::get('/',[EmployeController::class,'index'])->name('employes');
         Route::get('/show/{employe}',[EmployeController::class,'show'])->name('employe_show');
-        Route::get('/create',[EmployeController::class,'create'])->name('employe_create');
+        Route::get('/create',[EmployeController::class,'create'])->name('employe_create')->middleware('can:create,'.Employe::class);
         Route::post('/store',[EmployeController::class,'store'])->name('employe_store');
-        Route::get('/edit/{employe}',[EmployeController::class,'edit'])->name('employe_edit');
+        Route::get('/edit/{employe}',[EmployeController::class,'edit'])->name('employe_edit')->middleware('can:create,employe');
         Route::put('/update',[EmployeController::class,'update'])->name('employe_update');
-        Route::delete('/delete/{id}',[EmployeController::class,'delete'])->name('employe_delete');
+        Route::delete('/delete/{employe}',[EmployeController::class,'delete'])->name('employe_delete');
     });
 
 

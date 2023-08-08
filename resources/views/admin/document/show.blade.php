@@ -14,7 +14,7 @@
                     <h5><span class="font-italic ">Client:</span> <small>{{$document->client->nom}}</small></h5>
                 </div>
                 <div class="card-footer bg-transparent border-success">
-                    <a class="h5 text-primary" href="{{asset('/fichiers/documents/'.$document->nom_fichier)}}" target="_blank">Lire le document</a>
+                    <a class="h5 text-primary" href="{{asset(env('PUBLIC_URL').'fichiers/documents/'.$document->nom_fichier)}}" target="_blank">Lire le document</a>
                     <a href="{{route('documents')}}" class="h5 btn btn-outline-info ml-5">Retour</a>
                 </div>
             </div>

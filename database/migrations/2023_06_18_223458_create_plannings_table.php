@@ -16,12 +16,13 @@ return new class extends Migration
             $table->string('libelle');
             $table->text('detail')->nullable()->default(null);
             $table->date('date');
+            $table->date("date_fin")->nullable();
 
             $table->boolean('repete')->nullable()->default(false);
             $table->string('periodicite')->nullable()->default(null);
-            $table->string('repetition')->nullable()->default(null);
+            // $table->string('repetition')->nullable()->default(null);
 
-            $table->boolean('se_termine')->nullable()->default(true);
+            $table->boolean('is_done')->nullable()->default(false);
             $table->date('se_termine_le')->nullable()->default(null);
             $table->string('se_termine_apres')->nullable()->default(null);
 

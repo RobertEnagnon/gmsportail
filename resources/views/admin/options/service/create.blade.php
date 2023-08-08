@@ -4,7 +4,7 @@
 
 @section('main')
     <div class="row">
-        <div class="col-6 mx-auto">
+        <div class="col-lg-6 col-md-8 mx-auto">
             <div class="card card-primary">
                 <div class="card-header">
                   <h3 class="card-title">Nouveau Service</h3>
@@ -13,9 +13,9 @@
                 <form method="POST" action="{{route('service_store')}}"  >
                     @csrf
                     <div class="card-body">
-                        <div class="form-group">
+                        <div class="form-group"> 
                             <label for="numero">Numero</label>
-                            <input type="Number" class="form-control" value="{{$latest->id+1}}" id="numero"  disabled>
+                            <input type="Number" class="form-control" value="{{$latest ? $latest->id+1 : 1}}" id="numero"  disabled>
                         </div>
                         <div class="form-group">
                             <label for="libelle">Libellé</label>

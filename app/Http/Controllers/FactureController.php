@@ -43,10 +43,16 @@ class FactureController extends Controller
    
         $this->validate($request,[
             'libelle'=>'required|string',
-            'fichier'=>'required',
+            "fichier"=>'required',
             'client_id'=>'required',
             'societe_id'=>'required',
             'date'=>'required|date',
+        ],[
+            'libelle'=>'Ce champ est obligoire',
+            "fichier"=>'Ce champ est obligoire un fichier pdf',
+            'client_id'=>'Ce champ est obligoire',
+            'societe_id'=>'Ce champ est obligoire',
+            'date'=>'Ce champ est obligoire et doit être une date',
         ]);
 
         // Obtenir le nom complet du fichier
@@ -97,42 +103,66 @@ class FactureController extends Controller
         $this->validate($request,[
             'id'=>'required',
             'libelle'=>'required|string',
-            'fichier'=>'required',
             'client_id'=>'required',
             'societe_id'=>'required',
             'date'=>'required|date',
+        ],[
+            'libelle'=>'Ce champ est obligoire',
+            'client_id'=>'Ce champ est obligoire',
+            'societe_id'=>'Ce champ est obligoire',
+            'date'=>'Ce champ est obligoire et doit être une date',
         ]);
+        
 
-        // Obtenir le nom complet du fichier
+       if($request->hasFile('fichier')){
+            // Obtenir le nom complet du fichier
         $completeFileName = $request->file('fichier')->getClientOriginalName();
-        // obtenir uniquement le nom du fichhier
-        $fileNameOnly = pathinfo($completeFileName,PATHINFO_FILENAME);
-        // Obtenir l'extension du fichier
-        $extension = $request->file('fichier')->getClientOriginalExtension();
-        // Le dossier oû garder les fichiers du document
-        $upload_path= public_path().'/fichiers/factures/';
+            // obtenir uniquement le nom du fichhier
+            $fileNameOnly = pathinfo($completeFileName,PATHINFO_FILENAME);
+            // Obtenir l'extension du fichier
+            $extension = $request->file('fichier')->getClientOriginalExtension();
+            // Le dossier oû garder les fichiers du document
+            $upload_path= public_path().'/fichiers/factures/';
+    
+            // Réecriture du nom du fichier
+            $compFic = str_replace(' ','_',$fileNameOnly).'-'.rand().time().'.'.$extension;
+    
+            // Obtenir url du fichier
+            $fichier_url = $upload_path.$compFic;
+            // Déplacer le fichier dans le dossier du stockage
+            
+            try {
+                Facture::where('id',$request->id)->update([
+                    'libelle'=>$request->libelle,
+                    'nom_fichier'=> $compFic,
+                    'client_id'=>$request->client_id,
+                    'societe_id'=>$request->societe_id,
+                    'date'=>Carbon::parse($request->date)
+                ]);
+                $request->file('fichier')->move($upload_path,$compFic);
+                flash()->addSuccess('Sucèss! Facture modifiée avec sucèss');
+                return redirect()->route('factures',[],201);
+           } catch (\Throwable $th) {
+                flash()->addError('Oops! Erreur de modifications: '.$th->getMessage());
+                return redirect()->route('facture_edit',$request->id);
+           }
+       }else{
+            try {
+                Facture::where('id',$request->id)->update([
+                    'libelle'=>$request->libelle,
+                    'client_id'=>$request->client_id,
+                    'societe_id'=>$request->societe_id,
+                    'date'=>Carbon::parse($request->date)
+                ]);
+                flash()->addSuccess('Sucèss! Facture modifiée avec sucèss');
+                return redirect()->route('factures',[],201);
+            } catch (\Throwable $th) {
+                    flash()->addError('Oops! Erreur de modifications: '.$th->getMessage());
+                    return redirect()->route('facture_edit',$request->id);
+            }
+       }
 
-        // Réecriture du nom du fichier
-        $compFic = str_replace(' ','_',$fileNameOnly).'-'.rand().time().'.'.$extension;
-
-        // Obtenir url du fichier
-        $fichier_url = $upload_path.$compFic;
-        // Déplacer le fichier dans le dossier du stockage
-        $request->file('fichier')->move($upload_path,$compFic);
-
-        if (Facture::where('id',$request->id)->update([
-            'libelle'=>$request->libelle,
-            'nom_fichier'=>$compFic,
-            'client_id'=>$request->client_id,
-            'societe_id'=>$request->societe_id,
-            'date'=>Carbon::parse($request->date)
-        ])) {
-            flash()->addSuccess('Sucèss! Facture modifiée avec sucèss');
-            return to_route('factures',[],201);
-        } else {
-            flash()->addError('Oops! Erreur de modifications');
-            return to_route('facture_edit',$request->id);
-        }
+        
         
     }
 

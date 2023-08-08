@@ -20,4 +20,5 @@ class PrioriteFactory extends Factory
             'libelle'=>fake()->colorName(),
         ];
     }
+    // Faible, Haut, Moyenne
 }

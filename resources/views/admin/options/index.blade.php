@@ -7,7 +7,7 @@
   @section('main')
     <div class="row">
             
-      <div class="col-8">
+      <div class="col-lg-6 col-md-8">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" id="options" role="tablist">
           <li class="nav-item" role="presentation">
@@ -33,7 +33,7 @@
               <!-- /.card-header -->
               <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
-                  <a href="{{route('service_create')}}" class="btn btn-primary">Créer un nouveau</a>
+                  <a href="{{route('service_create')}}" class="btn btn-primary mb-2">Créer un nouveau</a>
                   <thead>
                   <tr>
                       <th>N°</th>
@@ -49,10 +49,10 @@
                               <td>{{$service->id}}</td>
                               <td>{{$service->libelle}}</td>
                               <td>{{$service->email}}</td>
-                              <td class="d-flex justify-content-end">
-                                <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                              <td class="d-flex align-items-center justify-content-end">
+                                <a href="#" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
                                 <a class="btn btn-outline-dark btn-sm m-1" href="{{route('service_edit',$service->id)}}">
-                                  <i class="fas fa-edit"></i> Modifier
+                                  <i class="fas fa-edit"></i> 
                                 </a>
                                 <form action="{{route('service_delete',$service->id)}}" method="post">
                                   @csrf
@@ -81,7 +81,7 @@
               <!-- /.card-header -->
               <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
-                  <a href="{{route('priorite_create')}}" class="btn btn-primary">Créer un nouveau</a>
+                  <a href="{{route('priorite_create')}}" class="btn btn-primary mb-2">Créer un nouveau</a>
                   <thead>
                   <tr>
                       <th>N°</th>
@@ -95,10 +95,10 @@
                           <tr>
                               <td>{{$priorite->id}}</td>
                               <td>{{$priorite->libelle}}</td>
-                              <td class="d-flex justify-content-end">
-                                <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                              <td class="d-flex align-items-center justify-content-end">
+                                <a href="#" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
                                 <a class="btn btn-outline-dark btn-sm m-1" href="{{route('priorite_edit',$priorite->id)}}">
-                                  <i class="fas fa-edit"></i> Modifier
+                                  <i class="fas fa-edit"></i> 
                                 </a>
                                 <form action="{{route('priorite_delete',$priorite->id)}}" method="post">
                                   @csrf
@@ -126,7 +126,7 @@
               <!-- /.card-header -->
               <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
-                  <a href="{{route('type_document_create')}}" class="btn btn-primary">Créer un nouveau</a>
+                  <a href="{{route('type_document_create')}}" class="btn btn-primary mb-2">Créer un nouveau</a>
                   <thead>
                   <tr>
                       <th>N°</th>
@@ -140,10 +140,10 @@
                           <tr>
                               <td>{{$typeDoc->id}}</td>
                               <td>{{$typeDoc->libelle}}</td>
-                              <td class="d-flex justify-content-end ">
-                                <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                              <td class="d-flex align-items-center justify-content-end ">
+                                <a href="#" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
                                 <a class="btn btn-outline-dark btn-sm m-1" href="{{route('type_document_edit',$typeDoc->id)}}">
-                                  <i class="fas fa-edit"></i> Modifier
+                                  <i class="fas fa-edit"></i> 
                                 </a>
                                 <form action="{{route('type_document_delete',$typeDoc->id)}}" method="post">
                                   @csrf
@@ -179,7 +179,7 @@
   })
  </script>
  
- <script src="{{asset('js/admin/options.js')}}"></script>
+ <script src="{{asset(env('PUBLIC_URL').'js/admin/options.js')}}"></script>
   @endsection
  
 

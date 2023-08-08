@@ -18,7 +18,6 @@ class Employe extends Model
         'site_id',
         'client_id',
         'societe_id',
-        'date'
     ];
 
     public $timestamps = false;

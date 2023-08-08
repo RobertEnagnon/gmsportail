@@ -19,17 +19,20 @@ class ServiceController extends Controller
         $this->validate($request,[
             'libelle'=>'required|string',
             'email'=>'required|email',
+        ],[
+            'libelle'=>'Ce champ est obligatoire',
+            'email'=>'Ce champ est obligatoire',
         ]);
         
-
-        if(Service::create([
-            'libelle'=>$request->libelle,
-            'email'=>$request->email,
-        ])){
+        try {
+            Service::create([
+                'libelle'=>$request->libelle,
+                'email'=>$request->email,
+            ]);
             flash()->addSuccess("Service créé avec sucèss");
             return to_route('options');
-        } else {
-            flash()->addError('Erreur! Echec de création du service');
+        } catch (\Throwable $th) {
+            flash()->addError('Erreur! Echec de création du service: '.$th->getMessage());
             return to_route('service_create',$request->id);
         }
 
@@ -47,17 +50,22 @@ class ServiceController extends Controller
             'id'=>'required',
             'libelle'=>'required|string',
             'email'=>'required|email',
+        ],[
+            'libelle'=>'Ce champ est obligatoire',
+            'email'=>'Ce champ est obligatoire',
         ]);
 
 
-        if(Service::where('id',$request->id)->update([
-            'libelle'=>$request->libelle,
-            'email'=>$request->email,
-        ])){
+        try {
+            Service::where('id',$request->id)->update([
+                'libelle'=>$request->libelle,
+                'email'=>$request->email,
+            ]);
             flash()->addSuccess('Sucèss! Service modifié avec sucèss');
             return redirect()->route('options');
-        } else {
-            flash()->addError('Oops! Erreur de modifications');
+
+        } catch (\Throwable $th) {
+            flash()->addError('Oops! Erreur de modifications: '.$th->getMessage());
             return redirect()->route('service_edit',$request->id);
         }
     }

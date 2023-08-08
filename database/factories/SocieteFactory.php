@@ -20,4 +20,8 @@ class SocieteFactory extends Factory
             'libelle'=>fake()->word(),
         ];
     }
+
+    // GMS
+    // MG
+    // MI
 }

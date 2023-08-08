@@ -6,11 +6,20 @@ use App\Models\Client;
 use App\Models\Site;
 use App\Models\Societe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SiteController extends Controller
 {
     public function index(){
-        $sites = Site::all();
+        $sites = null;
+        
+        //http://178.238.238.52:8083/api/gms/sites/GMS/1205
+
+        if (Auth::user()->is_admin) {
+            $sites = Site::all();
+        } else {
+            $sites = Site::where('client_id',Auth::user()->client_id)->get();
+        }
         
         return view('admin.sites.index', compact('sites'));
     }
@@ -27,22 +36,28 @@ class SiteController extends Controller
     }
 
     public function store(Request $request){
+        $this->authorize('create', Site::class);
         $this->validate($request,[
             'libelle'=>'required|string',
             'societe_id'=>'required',
             'client_id'=>'required',
+        ],[
+            'libelle'=>'Ce champ est obligatoire',
+            'societe_id'=>'Ce champ est obligatoire',
+            'client_id'=>'Ce champ est obligatoire',
         ]);
         
 
-        if(Site::create([
-            'libelle'=>$request->libelle,
-            'societe_id'=>$request->societe_id,
-            'client_id'=>$request->client_id,
-        ])){
+        try {
+            Site::create([
+                'libelle'=>$request->libelle,
+                'societe_id'=>$request->societe_id,
+                'client_id'=>$request->client_id,
+            ]);
             flash()->addSuccess("Site créé avec sucèss");
             return to_route('sites');
-        } else {
-            flash()->addError('Erreur! Echec de création du site');
+        } catch (\Throwable $th) {
+            flash()->addError('Erreur! Echec de création du site: '.$th->getMessage());
             return to_route('site_create',$request->id);
         }
 
@@ -63,25 +78,31 @@ class SiteController extends Controller
             'libelle'=>'required|string',
             'societe_id'=>'required',
             'client_id'=>'required',
+        ],[
+            'libelle'=>'Ce champ est obligatoire',
+            'societe_id'=>'Ce champ est obligatoire',
+            'client_id'=>'Ce champ est obligatoire',
         ]);
 
-
-        if(Site::where('id',$request->id)->update([
-            'libelle'=>$request->libelle,
-            'societe_id'=>$request->societe_id,
-            'client_id'=>$request->client_id,
-        ])){
+        try {
+            Site::where('id',$request->id)->update([
+                'libelle'=>$request->libelle,
+                'societe_id'=>$request->societe_id,
+                'client_id'=>$request->client_id,
+            ]);
             flash()->addSuccess('Sucèss! Site modifié avec sucèss');
             return to_route('sites');
-        } else {
-            flash()->addError('Oops! Erreur de modifications');
+        } catch (\Throwable $th) {
+            flash()->addError('Oops! Erreur de modifications: '.$th->getMessage());
             return to_route('site_edit',$request->id);
         }
     }
 
-    public function delete(int $id){
+    public function delete(Site $site){
+        $this->authorize('update',$site);
         try {
-            Site::destroy($id);
+            // Site::destroy($id);
+            $site->delete();
             flash()->addSuccess('Sucèss! Site supprimé avec sucèss');
             return to_route('sites');
         } catch (\Throwable $th) {

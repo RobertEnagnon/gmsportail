@@ -4,32 +4,31 @@
 @section('css')
 
   <!-- Tempusdominus Bootstrap 4 -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
   <!-- Select2 -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/select2/css/select2.min.css')}}">
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/select2/css/select2.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
   <!-- Bootstrap4 Duallistbox -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css')}}">
   <!-- BS Stepper -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/bs-stepper/css/bs-stepper.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/bs-stepper/css/bs-stepper.min.css')}}">
   <!-- dropzonejs -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/dropzone/min/dropzone.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/dropzone/min/dropzone.min.css')}}">
 @endsection
 
 @section('main')
     <div class="row">
-        <div class="col-6 mx-auto">
+        <div class="col-lg-6 col-md-8 mx-auto">
             <div class="card card-primary">
                 <div class="card-header">
                   <h3 class="card-title">Nouveau Client</h3>
                 </div>
-
                 <form method="POST" action="{{route('client_store')}}"  enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
                         <div class="form-group">
                             <label for="numero">Numero</label>
-                            <input type="number" value="{{$latest->id+1}}" class="form-control" id="numero" disabled >
+                            <input type="number" value="{{$latest ? $latest->id+1 : 1}}" class="form-control" id="numero" disabled >
                         </div>
                         <div class="form-group">
                             <label for="code">code</label>
@@ -45,41 +44,44 @@
                             @error('nom')
                                 <div class="text-danger">{{$message}}</div>
                             @enderror
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="file">Fichier</label>
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="file" name="logo">
-                                    <label class="custom-file-label" for="file">Choisir un fichier</label>
+                            
+                            <div class="form-group">
+                                <label for="file">Logo</label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="file" name="logo">
+                                        <label class="custom-file-label" for="file">Choisir un fichier</label>
+                                    </div>
+                                    
                                 </div>
-                               
-                            </div>
-                            <div>
-                                N.B fichier image (jpeg, png etc)
-                            </div>
-                            @error('logo')
-                            <div class="text-danger">{{$message}}</div>
-                        @enderror
+                                <div>
+                                    N.B fichier image (jpeg, png etc)
+                                    
+                                </div>
+                                @error('logo')
+                                    <div class="text-danger">{{$message}}</div>
+                                @enderror           </div>
                         </div>
                         <div class="form-group">
-                            <label for="mi_affaire_mi">Numéro Affaire (MI)</label>
-                            <input type="text" class="form-control" id="mi_affaire_mi" name="mi_affaire_id" placeholder="Numéro affaire (omag - Base MI)">
+                            <label for="mi_affaire">Numéro Affaire (MI)</label>
+                            <input type="text" class="form-control" id="mi_affaire" name="mi_affaire_id" placeholder="Numéro affaire (omag - Base MI)">
                             @error('mi_affaire_id')
                                 <div class="text-danger">{{$message}}</div>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="mi_affaire_gms">Numéro Affaire (GMS)</label>
-                            <input type="text" class="form-control" id="mi_affaire_gms" name="gms_affaire_id" placeholder="Numéro affaire (omag - Base GMS)">
+                            <label for="gms_affaire">Numéro Affaire (GMS)</label>
+                            <input type="text" class="form-control" id="gms_affaire" name="gms_affaire_id" placeholder="Numéro affaire (omag - Base GMS)">
+                            <select class="ml-auto px-2 bg-primary" style="float: right; border: none; outline:none; display:none">
+                                <option value="">--site--</option>
+                            </select>
                             @error('gms_affaire_id')
                                 <div class="text-danger">{{$message}}</div>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="mg">Numéro Affaire (MG)</label>
-                            <input type="text" class="form-control" id="mg" name="mg_affaire_id" placeholder="Numéro affaire (omag - Base MG)">
+                            <label for="mg_affaire">Numéro Affaire (MG)</label>
+                            <input type="text" class="form-control" id="mg_affaire" name="mg_affaire_id" placeholder="Numéro affaire (omag - Base MG)">
                             @error('mg_affaire_id')
                                 <div class="text-danger">{{$message}}</div>
                             @enderror
@@ -98,27 +100,27 @@
 
 @section('js')
 
-<!-- bs-custom-file-input -->
-    <script src="{{asset('adminlte/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
+    <!-- bs-custom-file-input -->
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
     <!-- Select2 -->
-    <script src="{{asset('adminlte/plugins/select2/js/select2.full.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/select2/js/select2.full.min.js')}}"></script>
     <!-- Bootstrap4 Duallistbox -->
-    <script src="{{asset('adminlte/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
     <!-- InputMask -->
-    <script src="{{asset('adminlte/plugins/moment/moment.min.js')}}"></script>
-    <script src="{{asset('adminlte/plugins/inputmask/jquery.inputmask.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/moment/moment.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/inputmask/jquery.inputmask.min.js')}}"></script>
     <!-- Tempusdominus Bootstrap 4 -->
-    <script src="{{asset('adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
     <!-- Bootstrap Switch -->
-    <script src="{{asset('adminlte/plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
     <!-- BS-Stepper -->
-    <script src="{{asset('adminlte/plugins/bs-stepper/js/bs-stepper.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/bs-stepper/js/bs-stepper.min.js')}}"></script>
     <!-- dropzonejs -->
-    <script src="{{asset('adminlte/plugins/dropzone/min/dropzone.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/dropzone/min/dropzone.min.js')}}"></script>
 
 
     <!-- AdminLTE App -->
-    <script src="{{asset('adminlte/js/adminlte.min.js')}}"></script>
+    <!--<script src="{{asset(env('PUBLIC_URL').'adminlte/js/adminlte.min.js')}}"></script>-->
     <!-- Page specific script -->
     <script>
         $(function () {
@@ -214,4 +216,5 @@
     }
     // DropzoneJS Demo Code End
     </script>
+     <script src="{{asset(env('PUBLIC_URL').'js/admin/client.js')}}"></script>
 @endsection

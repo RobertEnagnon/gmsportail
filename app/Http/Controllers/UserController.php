@@ -56,7 +56,8 @@ class UserController extends Controller
     }
 
     public function logout(Request $request){
-         Auth::logout();
+         try {
+            Auth::logout();
 
         $request->session()->invalidate();
 
@@ -64,6 +65,10 @@ class UserController extends Controller
  
         flash()->addSuccess("Vous êtes déconnecté avec sucèss");
         return redirect('/');
+         } catch (\Throwable $th) {
+            flash()->addSuccess("Vous êtes déconnecté avec sucèss: ".$th->getMessage());
+            return back();
+         }
     }
 
     /**
@@ -89,8 +94,9 @@ class UserController extends Controller
             'prenom'=>'required',
             'email'=>'required|email|unique:users',
             'password'=>'required|confirmed',
-            'client_id' => 'required'
+            // 'client_id' => 'required'
         ]);
+        
 
         // Creation
         $user = User::create([
@@ -98,8 +104,8 @@ class UserController extends Controller
             'prenom'=>$request->prenom,
             'email'=>$request->email,
             'password'=>Hash::make($request->password),
-            'client_id' => $request->client_id,
-            'is_client'=>$request->is_client,
+            'client_id' => $request->client_id ? $request->client_id : null,
+            'is_client'=>$request->is_client ? $request->is_client : 0,
             'derniere_con'=>Carbon::now(),
         ]);
 
@@ -107,9 +113,10 @@ class UserController extends Controller
             // Auth::login($user);
             $email = $request->email;
              //Send mail
-        Mail::send('auth.mail.register_user', ['prenom'=>$request->prenom,'password'=>$request->password,'email'=>$email], function ($message) use($email) {
+        Mail::send('auth.mail.register_user', ['prenom'=>$request->prenom,
+                'password'=>$request->password,'email'=>$email,'lien'=>'login'], function ($message) use($email) {
             $message->to($email);
-            $message->subject('Informations du compte utilisateur');
+            $message->subject('Informations du compte utilisateur pour se connecter');
         });
             flash()->addSuccess("compte enrégistré avec sucèss");
             // return redirect(RouteServiceProvider::HOME);
@@ -138,43 +145,41 @@ class UserController extends Controller
             'nom'=>'required',
             'prenom'=>'required',
             'email'=>'required|email',
-            'password'=>'required|confirmed',
-            'client_id' => 'required',
+        ],[
+            'nom'=>'Ce champ est obligatoire',
+            'prenom'=>'Ce champ est obligatoire',
+            'email'=>'Ce champ est obligatoire et doit être un email',
         ]);
 
         $id = $request->id;
 
         $user = User::find($id);
+       
         if (!$user) {
             flash()->addError('Cet utilisateur n\'existe pas !');
             return to_route('user_edit',$request->id);
         }
 
-        if (User::where('id',$request->id)->update([
-            'nom'=>$request->nom,
-            'prenom'=>$request->prenom,
-            'email'=>$request->email,
-            'password'=>Hash::make($request->password),
-            'client_id' => $request->client_id,
-            'is_client'=>$request->is_client,
-            'derniere_con'=>Carbon::now(),
-        ])) {
-          
-    
+        try {
+            User::where('id',$request->id)->update([
+                'nom'=>$request->nom,
+                'prenom'=>$request->prenom,
+                'email'=>$request->email,
+                'client_id' => $request->client_id ? $request->client_id : null,
+                'is_client'=>$request->is_client ? $request->is_client : 0,
+            ]);
             $email = $request->email;
                  //Send mail
-            Mail::send('auth.mail.register_user', ['prenom'=>$request->prenom,'password'=>$request->password,'email'=>$email], function ($message) use($email) {
+            Mail::send('auth.mail.update_user', ['prenom'=>$request->prenom,'email'=>$email,'lien'=>'login'], function ($message) use($email) {
                 $message->to($email);
                 $message->subject('Modification des Informations du compte utilisateur');
             });
 
-            flash()->addSuccess(' L\utilisateur a été mise à jours avec sucèss!');
+            flash()->addSuccess(' L\'utilisateur a été mise à jours avec sucèss!');
 
             return redirect('/users');
-
-            
-        }else{
-            flash()->addError('Oops! Erreur de modifications');
+        } catch (\Throwable $th) {
+            flash()->addError('Oops! Erreur de modifications: '.$th->getMessage());
             return to_route('user_edit',$request->id);
         }
     }

@@ -12,15 +12,6 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center">Créer un utilisateur</h1>
-        @if ($errors->any())
-            <div class="text-center">
-                <div>
-                    @foreach ($errors->all() as $error)
-                        <p class="text-danger">{{$error}}</p>
-                    @endforeach
-                </div>
-            </div>
-        @endif
 
         <form action="/register" method="POST" class="col-md-6 mx-auto">
             @csrf
@@ -28,22 +19,37 @@
             <div class="form-group mb-3">
                 <label class="form-label" for="nom">Nom</label>
                 <input type="text" id="nom" name="nom" value="{{old('nom')}}" class="form-control" autofocus>
+                @error('nom')
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
             </div>
             <div class="form-group mb-3">
                 <label class="form-label" for="prenom">Prenom</label>
                 <input type="text" id="prenom" name="prenom" value="{{old('prenom')}}" class="form-control" >
+                @error('prenom')
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
             </div>
             <div class="form-group mb-3">
                 <label class="form-label" for="email">Email</label>
                 <input type="email" id="email" name="email" value="{{old('email')}}" class="form-control" >
+                @error('email')
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
             </div>
             <div class="form-group mb-3">
                 <label class="form-label" for="password">Password</label>
                 <input type="password" id="password" name="password" value="{{old('password')}}" class="form-control" >
+                @error('password')
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
             </div>
             <div class="form-group mb-3">
                 <label class="form-label" for="password_confirmation">Confirmez Password</label>
                 <input type="password_confirmation" id="password_confirmation" name="password_confirmation" value="{{old('password_confirmation')}}" class="form-control" >
+                @error('password_confirmation')
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
             </div>
             <div class="form-group mb-3">
                 <input type="checkbox" id="is_client" name="is_client" value="{{1}}" class="form-check-input" >
@@ -53,11 +59,14 @@
             <div class="form-group mb-3">
                 <label for="client_id" class="form-label">Selectionez le client</label>
                 <select name="client_id" class="form-select">
-                    <option>Client</option>
+                    <option value="">--Client--</option>
                   @foreach ($clients as $client)
                       <option value="{{$client->id}}">{{$client->nom}}</option>
                   @endforeach
                 </select>
+                @error('client_id')
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
             </div>
             {{-- <p>Vous-avez déjà un compte? <a href="/login">connectez-vous</a></p> --}}
             <button type="submit" class="btn btn-primary mt-3">Soumettre</button>

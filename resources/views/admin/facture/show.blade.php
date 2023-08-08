@@ -12,7 +12,7 @@
                     <h5><span class="font-italic ">Client:</span> <small>{{$facture->client->nom}}</small></h5>
                 </div>
                 <div class="card-footer bg-transparent border-success">
-                    <a class="h5 text-primary" href="{{asset('/fichiers/factures/'.$facture->nom_fichier)}}" target="_blank">Lire la facture</a>
+                    <a class="h5 text-primary" href="{{asset(env('PUBLIC_URL').'fichiers/factures/'.$facture->nom_fichier)}}" target="_blank">Lire la facture</a>
                     <a href="{{route('factures')}}" class="h5 btn btn-outline-info ml-5">Retour</a>
                 </div>
             </div>

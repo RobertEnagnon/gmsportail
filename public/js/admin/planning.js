@@ -25,6 +25,12 @@ repeatCheck.addEventListener('change',function(event){
       }
 })
 
+if (repeatCheck.checked) {
+      repeateContainer.style.height = 'auto';
+      repeateContainer.style.visibility = "visible";
+      repeateContainer.style.transition = "all 0.5s ease";
+}
+
 const reteption1 = document.getElementById('reteption1');
 const seTermineLe = document.getElementById('se_termine_le');
 const reteption2 = document.getElementById('reteption2');

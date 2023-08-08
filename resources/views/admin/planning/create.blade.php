@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('css')
-    <link rel="stylesheet" href="{{asset('css/admin/planning.css')}}">
+    <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'css/admin/planning.css')}}">
    
     <style>
   
@@ -43,6 +43,9 @@
             transition: all 0.4s ease;
         }
     </style>
+  
+  {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css"> --}}
+  
 @endsection
 
 @section('main')
@@ -58,7 +61,7 @@
                     <div id="calendar"></div>
                 </div>
 
-                {{-- Modal of detail showning --}}
+                {{-- Modal pour affichage des details --}}
                 <div class="modal fade " id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                       <div class="modal-content"> 
@@ -90,16 +93,17 @@
                             <div id="program" class="mb-2">
                                 <i class="fas fa-clock text-muted"></i>
                                 <span  class="h6">Début: <span id="start">Jeudi 22,Juin</span></span> <br>
-                                <span class="text-muted ml-5">Fin: <span id="end" > Vendredi 23, Juin</span></span><br>
+                                <span class="h6 text-muted ml-4">Fin: <span id="end" > Vendredi 23, Juin</span></span><br>
                             </div>
 
                             <div id="detail">
-                                <i class="fas fa-bars text-muted"></i>
+                                <i class="fas fa-bars text-muted"><span class="pl-1">Details</span></i>
                                 <span id="desc"></span>
                             </div>
                         </div>
                         <div class="modal-footer">
-                          <button type="button" class="btn btn-outline-info" data-dismiss="modal">Fermer</button>
+                          <a class="btn " id="doneBtn">Marquer comme terminée</a>
+                          <a class="btn " id="undoneBtn">Marquer comme non terminée</a>
                         </div>
                       </div>
 
@@ -112,7 +116,7 @@
 
 
 
-        {{-- Modal of add showning --}}
+        {{-- Modal pour ajouter ou créer une nouvelle tâche --}}
         @can('create', App\Models\Planning::class)
             <div class="modal fade " id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -137,6 +141,7 @@
                                                 <div class="col">
                                                     <label for="client">Client <span class="text-danger">*</span></label>
                                                     <select class="form-control" id="client" name="client_id">
+                                                        <option value="">--client--</option>
                                                         @foreach ($clients as $client)
                                                             <option value="{{$client->id}}">{{$client->nom}}</option>
                                                         @endforeach
@@ -144,10 +149,11 @@
                                                     @error('client_id')
                                                         <div class="text-danger">{{$message}}</div>
                                                     @enderror
-                                                                </div>
+                                                </div>
                                                 <div class="col">
                                                     <label for="entite">Entité <span class="text-danger">*</span></label>
                                                     <select class="form-control" id="entite" name="societe_id">
+                                                        <option value="">--entité--</option>
                                                         @foreach ($entites as $entite)
                                                             <option value="{{$entite->id}}">{{$entite->libelle}}</option>
                                                         @endforeach
@@ -173,8 +179,15 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col">
-                                                    <label for="date">Date <span class="text-danger">*</span></label>
+                                                    <label for="date">Date Debut <span class="text-danger">*</span></label>
                                                     <input type="date" class="form-control" id="date" name="date" >
+                                                    @error('date')
+                                                        <div class="text-danger">{{$message}}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col">
+                                                    <label for="date_fin">Date Fin <span class="text-danger">*</span></label>
+                                                    <input type="date" class="form-control" id="date_fin" name="date_fin" >
                                                     @error('date')
                                                         <div class="text-danger">{{$message}}</div>
                                                     @enderror
@@ -194,17 +207,17 @@
                                                     <div class="text-danger">{{$message}}</div>
                                                 @enderror
                                             </div>
-                                            <div id="repeateContainer" class="my-4">
+                                            <div id="repeateContainer" class="my-4"> 
                                                 
                                                 <div class="form-group">
-                                                    <label for="periodicite">Périodicité</label>
+                                                    <label for="periodicite">Périodicité (récurrente)</label>
                                                     <div class="form-control">
                                                         <span class="col-2">1 </span>
                                                         <select name="periodicite" id="periodicite" class="col-10" style="border: none; outline: none" >
-                                                            <option value="jour">jour</option>
-                                                            <option value="semaine">semaine</option>
-                                                            <option value="mois">mois</option>
-                                                            <option value="an">an</option>
+                                                            <option value="daily">Journalière</option>
+                                                            <option value="weekly">hebdomadaire</option>
+                                                            <option value="monthly">mensuelle</option>
+                                                            {{-- <option value="an">an</option> --}}
                                                         </select>
                                                     </div>
                                                     @error('periodicite')
@@ -253,24 +266,85 @@
 @endsection
 
 @section('js')
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> --}}
+
+  {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script> --}}
+    {{-- FullCalendar librairie --}}
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
 
+            
+
             var calendar = new FullCalendar.Calendar(calendarEl, {
+                // plugins:[dayGridPlugin],
                 initialView: 'dayGridMonth',
                 editable: true,
-                events: '{{ route('planning.getEvents') }}',
+                // events: '{{ route('planning.getEvents') }}',
+                events: [
+                    @foreach ($plannings as $event)
+                        {
+                            title: '{{ $event->libelle }}',
+                            start: '{{ $event->date }}',
+                            end: moment('{{ $event->date_fin }}').add(1, 'days').format('YYYY-MM-DD'),
+                            id : '{{$event->id}}', 
+                            color : '{{$event->couleur}}', 
+                    
+                            is_done : '{{$event->is_done}}',
+                            client_id: '{{$event->client_id}}',
+                            societe_id: '{{$event->societe_id}}',
+                            
+                            @if ($event->periodicite)
+                                @if ($event->periodicite === 'daily')
+                                    dow: [0, 1, 2, 3, 4, 5, 6],
+                                @elseif ($event->periodicite === 'weekly')
+                                    dow: moment('{{ $event->date }}').day(),
+                                @elseif ($event->periodicite === 'monthly')
+                                    startRecur: moment('{{ $event->date }}').format('YYYY-MM-DD'),
+                                    @if ($event->se_termine_le)
+                                        endRecur: moment('{{ $event->se_termine_le }}').format('YYYY-MM-DD') ,
+                                    @else
+                                        endRecur:moment('{{ $event->date_fin }}').format('YYYY-MM-DD'),
+                                    @endif
+                                    
+                                @endif
+                            @endif
+                            description:  `<div>{!! $event->detail !!} </div>` ,
+
+                        },
+                    @endforeach
+                ],
                 eventClick:  function(eventInfo) {
                     const event = eventInfo.event;
                     const info = event._def;
+
                     document.querySelector('#modalTitle').innerHTML = info.title;
                     document.querySelector('#start').innerHTML = event.startStr;
-                    document.querySelector('#end').innerHTML = event.endStr;
+                    document.querySelector('#end').innerHTML =  moment( event.endStr).add(-1, 'days').format('YYYY-MM-DD');
                     document.querySelector('#desc').innerHTML = info.extendedProps.description;
-                    // $('#eventUrl').attr('href',info.url);
+                    $('#eventUrl').attr('href',info.url);
                     document.querySelector('.modal-title #edit').setAttribute('href',`/admin/plannings/edit/${event.id}`);
                     document.querySelector('.modal-title #delete').setAttribute('action',`/admin/plannings/destroy/${event.id}`);
+
+                    let donebtn = document.querySelector('#doneBtn');
+                    let undonebtn = document.querySelector('#undoneBtn');
+
+                    donebtn.setAttribute('href',`/admin/plannings/done/${event.id}`);
+                    undonebtn.setAttribute('href',`/admin/plannings/undone/${event.id}`);
+
+                    if (event.extendedProps.is_done == 1) {
+                        donebtn.style.display = "none";
+                        undonebtn.style.display = "block";
+                        document.querySelector('#modalTitle').style.textDecoration = "line-through";
+                    }else{
+                        undonebtn.style.display = "none";
+                        donebtn.style.display = "block";
+                        document.querySelector('#modalTitle').style.textDecoration = "none";
+                    }
+
                
                     $('#calendarModal').modal();
                 },
@@ -284,7 +358,42 @@
             
             calendar.render();
         });
+
+        // $(document).ready(function() {
+        //     $('#calendar').fullCalendar({
+        //         events: [
+        //             @foreach ($plannings as $event)
+        //                 {
+        //                     title: '{{ $event->libelle }}',
+        //                     start: '{{ $event->date }}',
+        //                     end: '{{ $event->date_fin }}',
+        //                     id : '{{$event->id}}', 
+        //                     color : '{{$event->couleur}}', 
+        //                     description: `{!! $event->detail !!}`,
+        //                     is_done : '{{$event->is_done}}',
+        //                     client_id: '{{$event->client_id}}',
+        //                     societe_id: '{{$event->societe_id}}',
+
+        //                     @if ($event->periodicite)
+        //                         @if ($event->periodicite === 'daily')
+        //                             dow: [0, 1, 2, 3, 4, 5, 6],
+        //                         @elseif ($event->periodicite === 'weekly')
+        //                             dow: moment('{{ $event->date }}').day(),
+        //                         @elseif ($event->periodicite === 'monthly')
+        //                             startRecur: moment('{{ $event->date }}').format('YYYY-MM-DD'),
+        //                             endRecur: moment('{{ $event->se_termine_le }}').format('YYYY-MM-DD'),
+        //                         @endif
+        //                     @endif
+        //                 },
+        //             @endforeach
+        //         ]
+        //     });
+        // });
+
     </script>
+
+
+    
     <script src="https://cdn.tiny.cloud/1/ix8b72cwx40l8ynsz2d4t2hra6pq2tlsaiodp7b8uhowd28x/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
        tinymce.init({
@@ -293,6 +402,6 @@
           toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
        });
     </script>
-    <script src="{{asset('js/admin/planning.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'js/admin/planning.js')}}"></script>
 @endsection
 

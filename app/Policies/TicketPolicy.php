@@ -37,18 +37,18 @@ class TicketPolicy
     public function create(User $user): bool
     {
         if ($user->is_admin) {
-            return true;
-        }else{
             return false;
+        }else{
+            return true;
         }
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Ticket $facture): bool
+    public function update(User $user, Ticket $ticket): bool
     {
-        if ($user->is_admin) {
+        if ($user->client_id == $ticket->client_id) {
             return true;
         }else{
             return false;

@@ -46,14 +46,14 @@ class DocumentController extends Controller
 
         $validate = $this->validate($request,[
             'libelle'=>'required|string',
-            'fichier'=>'required',
+            "fichier"=>'required',
             'type_id'=>'required',
             'client_id'=>'required',
             'societe_id'=>'required',
             'date'=>'required|date',
         ],[
             'libelle'=>'Le champs du libellé est requis',
-            'fichier'=>'Le champs du fichier est requis',
+            'fichier'=>'Il fuat choisir un fichier document',
             'type_id'=>'Le champs du type est requis',
             'client_id'=>'Le champs du client est requis',
             'societe_id'=>'Le champs de l\'entité est requis',
@@ -73,25 +73,24 @@ class DocumentController extends Controller
         // Obtenir url du fichier
         $fichier_url = $upload_path.$compFic;
         // Déplacer le fichier dans le dossier du stockage
-        $request->file('fichier')->move($upload_path,$compFic);
-
-
-
-        if (Document::create([
-            'type_id'=>$request->type_id,
-            'client_id'=>$request->client_id,
-            'societe_id'=>$request->societe_id,
-            'libelle'=>$request->libelle,
-            'nom_fichier'=>$compFic,
-            'date'=>Carbon::parse($request->date),
-        ])) {
-            
-            flash()->addSuccess("Document créé avec sucèss");
+        
+        
+        try {
+            Document::create([
+                'type_id'=>$request->type_id,
+                'client_id'=>$request->client_id,
+                'societe_id'=>$request->societe_id,
+                'libelle'=>$request->libelle,
+                'nom_fichier'=>$compFic,
+                'date'=>Carbon::parse($request->date),
+            ]);
+                $request->file('fichier')->move($upload_path,$compFic);
+                flash()->addSuccess("Document créé avec sucèss");
             return redirect()->route('documents');
-        } else {
-            flash()->addError('Erreur! Echec de création du document');
+        } catch (\Throwable $th) {
+            flash()->addError('Erreur! Echec de création du document: '.$th->getMessage());
             return redirect()->route('document_create');
-        }  
+        }
 
     }
 
@@ -110,45 +109,68 @@ class DocumentController extends Controller
         $this->validate($request,[
             'id'=>'required',
             'libelle'=>'required|string',
-            'fichier'=>'required',
             'type_id'=>'required',
             'client_id'=>'required',
             'societe_id'=>'required',
             'date'=>'required|date',
-        ]);
+        ],[
+            'libelle'=>'Le champs du libellé est requis',
+            'type_id'=>'Le champs du type est requis',
+            'client_id'=>'Le champs du client est requis',
+            'societe_id'=>'Le champs de l\'entité est requis',
+            'date'=>'Le champs du date est requis',]);
 
-        // Obtenir le nom complet du fichier
-        $completeFileName = $request->file('fichier')->getClientOriginalName();
-        // obtenir uniquement le nom du fichhier
-        $fileNameOnly = pathinfo($completeFileName,PATHINFO_FILENAME);
-        // Obtenir l'extension du fichier
-        $extension = $request->file('fichier')->getClientOriginalExtension();
-        // Le dossier oû garder les fichiers du document
-        $upload_path= public_path().'/fichiers/documents/';
+        if ($request->hasFile('logo')) {
+            // Obtenir le nom complet du fichier
+            $completeFileName = $request->file('fichier')->getClientOriginalName();
+            // obtenir uniquement le nom du fichhier
+            $fileNameOnly = pathinfo($completeFileName,PATHINFO_FILENAME);
+            // Obtenir l'extension du fichier
+            $extension = $request->file('fichier')->getClientOriginalExtension();
+            // Le dossier oû garder les fichiers du document
+            $upload_path= public_path().'/fichiers/documents/';
 
-        // Réecriture du nom du fichier
-        $compFic = str_replace(' ','_',$fileNameOnly).'-'.rand().time().'.'.$extension;
+            // Réecriture du nom du fichier
+            $compFic = str_replace(' ','_',$fileNameOnly).'-'.rand().time().'.'.$extension;
 
-        // Obtenir url du fichier
-        $fichier_url = $upload_path.$compFic;
-        // Déplacer le fichier dans le dossier du stockage
-        $request->file('fichier')->move($upload_path,$compFic);
-
-        if (Document::where('id',$request->id)->update([
-            'type_id'=>$request->type_id,
-            'client_id'=>$request->client_id,
-            'societe_id'=>$request->societe_id,
-            'libelle'=>$request->libelle,
-            'nom_fichier'=>$compFic,
-            'date'=>Carbon::parse($request->date),
-        ])) {
+            // Obtenir url du fichier
+            $fichier_url = $upload_path.$compFic;
+            // Déplacer le fichier dans le dossier du stockage
             
-            flash()->addSuccess('Sucèss! Document modifié avec sucèss');
-            return to_route('documents');
-        } else {
-            flash()->addError('Oops! Erreur de modifications');
-            return to_route('document_edit',$request->id);
+            try {
+                Document::where('id',$request->id)->update([
+                    'type_id'=>$request->type_id,
+                    'client_id'=>$request->client_id,
+                    'societe_id'=>$request->societe_id,
+                    'libelle'=>$request->libelle,
+                    'nom_fichier'=>$compFic,
+                    'date'=>Carbon::parse($request->date),
+                ]);
+                $request->file('fichier')->move($upload_path,$compFic);
+                flash()->addSuccess('Sucèss! Document modifié avec sucèss');
+                return to_route('documents');
+            } catch (\Throwable $th) {
+                flash()->addError('Oops! Erreur de modifications: '.$th->getMessage());
+                return to_route('document_edit',$request->id);
+            }
+        }else{
+            try {
+                Document::where('id',$request->id)->update([
+                    'type_id'=>$request->type_id,
+                    'client_id'=>$request->client_id,
+                    'societe_id'=>$request->societe_id,
+                    'libelle'=>$request->libelle,
+                    'date'=>Carbon::parse($request->date),
+                ]);
+                
+                flash()->addSuccess('Sucèss! Document modifié avec sucèss');
+                return to_route('documents');
+            } catch (\Throwable $th) {
+                flash()->addError('Oops! Erreur de modifications: '.$th->getMessage());
+                return to_route('document_edit',$request->id);
+            }
         }
+        
     }
 
     public function delete(Document $document){

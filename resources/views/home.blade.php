@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
     <!-- Core theme CSS (includes Bootstrap)-->
-    <link rel="stylesheet" href={{ asset('css/style.css') }}>
+    <link rel="stylesheet" href={{ asset( env('PUBLIC_URL').'css/style.css') }}>
 
     <style>
         .main-timeline-2 {
@@ -136,7 +136,7 @@
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
         <div class="container">
-            <a class="navbar-brand" href="#page-top"><img src={{ asset('img/logo_gmsportail_.png') }}
+            <a class="navbar-brand" href="#page-top"><img src={{ asset(env('PUBLIC_URL').'img/logo_gmsportail_.png') }}
                     alt="GMSPORTAIL" /></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
@@ -170,8 +170,8 @@
                 <h2 class="section-heading text-uppercase">A Propos de Nous</h2>
                 <h3 class="section-subheading text-muted">Groupe Mondial Service .</h3>
             </div>
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="col-md-6 pe-2">
+            <div class="d-lg-flex justify-content-between align-items-center">
+                <div class="col-lg-6 pe-2">
                     <p>
                         Acteur omnipotent et en perpétuelle croissance de sa gamme de services dédiés aux institutionnels et aux professionnels, 
                         <span class="text-info text-uppercase">GrOUPE MONDIAL SERVICE</span> se dresse un modèle de développement pluridisciplinaire (managérial, technique, en qualité…) 
@@ -194,9 +194,9 @@
                         débouchés en déployant les nouvelles techniques de chacun de ses métiers.
                     </p> 
                 </div>
-                <div class="col-md-6">
+                <div class="col-lg-6  ">
                     <div class="card bg-dark text-white">
-                        <img src="{{asset('img/about/about-securite.jpg')}}" class="card-img" alt="...">
+                        <img src={{ asset(env('PUBLIC_URL').'img/about/about-securite.jpg') }} class="card-img" alt="...">
                         <div class="card-img-overlay">
                           
                         </div>
@@ -545,7 +545,7 @@
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
-    <script src={{ asset('js/script.js') }}></script>
+    <script src={{ asset(env('PUBLIC_URL').'js/script.js') }}></script>
     <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
     <!-- * *                               SB Forms JS                               * *-->
     <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->

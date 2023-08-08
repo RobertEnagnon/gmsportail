@@ -13,6 +13,6 @@ class FactureSeeder extends Seeder
      */
     public function run(): void
     {
-        Facture::factory(7)->create();
+        Facture::factory(2)->create();
     }
 }

@@ -5,36 +5,36 @@
      <!-- Google Font: Source Sans Pro -->
    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
    <!-- Font Awesome Icons -->
-   <link rel="stylesheet" href="{{asset('adminlte/plugins/fontawesome-free/css/all.min.css')}}">
+   <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/fontawesome-free/css/all.min.css')}}">
 
 
   <!-- daterange picker -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/daterangepicker/daterangepicker.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/daterangepicker/daterangepicker.css')}}">
   <!-- iCheck for checkboxes and radio inputs -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
   <!-- Bootstrap Color Picker -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css')}}">
   <!-- Tempusdominus Bootstrap 4 -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
   <!-- Select2 -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/select2/css/select2.min.css')}}">
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/select2/css/select2.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
   <!-- Bootstrap4 Duallistbox -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css')}}">
   <!-- BS Stepper -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/bs-stepper/css/bs-stepper.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/bs-stepper/css/bs-stepper.min.css')}}">
   <!-- dropzonejs -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/dropzone/min/dropzone.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/dropzone/min/dropzone.min.css')}}">
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{asset('adminlte/css/adminlte.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/css/adminlte.min.css')}}">
 @endsection
 
 @section('main')
     <div class="row">
-        <div class="col-6 mx-auto">
+        <div class="col-lg-6 col-md-8 mx-auto">
             <div class="card card-primary">
                 <div class="card-header">
-                  <h3 class="card-title">Nouveau Document</h3>
+                  <h3 class="card-title">Nouvelle Facture</h3>
                 </div>
 
                 <form method="POST" action="{{route('facture_store')}}"  enctype="multipart/form-data">
@@ -42,12 +42,12 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="numero">Numero</label>
-                            <input type="Number" class="form-control" value="{{$latest->id+1}}" id="numero" name="id" disabled>
+                            <input type="Number" class="form-control" value="{{$latest ? $latest->id+1 : 1}}" id="numero" name="id" disabled>
                         </div>
                         <div class="form-group">
                             <label for="client">Client</label>
                             <select class="form-control" id="client" name="client_id">
-                                <option value=""></option>
+                                <option value="">--client--</option>
                                 @foreach ($clients as $client)
                                 
                                     <option value="{{$client->id}}">{{$client->nom}}</option>
@@ -81,6 +81,7 @@
                         <div class="form-group">
                             <label for="entite">Entité</label>
                             <select class="form-control" id="entite" name="societe_id">
+                                <option value="">--entité--</option>
                                 @foreach ($entites as $entite)
                                     <option value="{{$entite->id}}">{{$entite->libelle}}</option>
                                 @endforeach
@@ -116,30 +117,30 @@
 @section('js')
 
 <!-- bs-custom-file-input -->
-    <script src="{{asset('adminlte/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
     <!-- Select2 -->
-    <script src="{{asset('adminlte/plugins/select2/js/select2.full.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/select2/js/select2.full.min.js')}}"></script>
     <!-- Bootstrap4 Duallistbox -->
-    <script src="{{asset('adminlte/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
     <!-- InputMask -->
-    <script src="{{asset('adminlte/plugins/moment/moment.min.js')}}"></script>
-    <script src="{{asset('adminlte/plugins/inputmask/jquery.inputmask.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/moment/moment.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/inputmask/jquery.inputmask.min.js')}}"></script>
     <!-- date-range-picker -->
-    <script src="{{asset('adminlte/plugins/daterangepicker/daterangepicker.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/daterangepicker/daterangepicker.js')}}"></script>
     <!-- bootstrap color picker -->
-    <script src="{{asset('adminlte/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js')}}"></script>
     <!-- Tempusdominus Bootstrap 4 -->
-    <script src="{{asset('adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
     <!-- Bootstrap Switch -->
-    <script src="{{asset('adminlte/plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
     <!-- BS-Stepper -->
-    <script src="{{asset('adminlte/plugins/bs-stepper/js/bs-stepper.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/bs-stepper/js/bs-stepper.min.js')}}"></script>
     <!-- dropzonejs -->
-    <script src="{{asset('adminlte/plugins/dropzone/min/dropzone.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/dropzone/min/dropzone.min.js')}}"></script>
 
 
     <!-- AdminLTE App -->
-    <script src="{{asset('adminlte/js/adminlte.min.js')}}"></script>
+    <!--<script src="{{asset(env('PUBLIC_URL').'adminlte/js/adminlte.min.js')}}"></script>-->
     <!-- Page specific script -->
     <script>
         $(function () {

@@ -13,5 +13,10 @@ class Service extends Model
         'libelle',
         'email'
     ];
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
     
 }

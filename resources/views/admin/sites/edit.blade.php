@@ -4,7 +4,7 @@
 
 @section('main')
     <div class="row">
-        <div class="col-6 mx-auto">
+        <div class="col-lg-6 col-md-8 mx-auto">
             <div class="card card-primary">
                 <div class="card-header">
                   <h3 class="card-title">Modifier le Site</h3>
@@ -20,6 +20,9 @@
                         <div class="form-group">
                             <label for="libelle">Libellé</label>
                             <input type="text" value="{{$site->libelle}}" class="form-control" id="libelle" name="libelle" >
+                            @error('libelle')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="client">Client</label>
@@ -30,6 +33,9 @@
                                     <option value="{{$client->id}}">{{$client->nom}}</option>
                                 @endforeach
                             </select>
+                            @error('client_id')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                        
                         <div class="form-group">
@@ -40,6 +46,9 @@
                                     <option value="{{$entite->id}}">{{$entite->libelle}}</option>
                                 @endforeach
                             </select>
+                            @error('societe_id')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="card-footer">

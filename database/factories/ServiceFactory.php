@@ -21,4 +21,5 @@ class ServiceFactory extends Factory
             'email'=>fake()->unique()->safeEmail(),
         ];
     }
+    
 }

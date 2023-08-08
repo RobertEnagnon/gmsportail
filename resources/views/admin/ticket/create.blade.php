@@ -5,134 +5,127 @@
      <!-- Google Font: Source Sans Pro -->
    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
    <!-- Font Awesome Icons -->
-   <link rel="stylesheet" href="{{asset('adminlte/plugins/fontawesome-free/css/all.min.css')}}">
+   <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/fontawesome-free/css/all.min.css')}}">
 
 
   <!-- daterange picker -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/daterangepicker/daterangepicker.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/daterangepicker/daterangepicker.css')}}">
   <!-- iCheck for checkboxes and radio inputs -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
   <!-- Bootstrap Color Picker -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css')}}">
   <!-- Tempusdominus Bootstrap 4 -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
   <!-- Select2 -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/select2/css/select2.min.css')}}">
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/select2/css/select2.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
   <!-- Bootstrap4 Duallistbox -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css')}}">
   <!-- BS Stepper -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/bs-stepper/css/bs-stepper.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/bs-stepper/css/bs-stepper.min.css')}}">
   <!-- dropzonejs -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/dropzone/min/dropzone.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/plugins/dropzone/min/dropzone.min.css')}}">
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{asset('adminlte/css/adminlte.min.css')}}">
+  <link rel="stylesheet" href="{{asset(env('PUBLIC_URL').'adminlte/css/adminlte.min.css')}}">
 @endsection
 
 @section('main')
     <div class="row">
-        <div class="col-8 mx-auto">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            {{-- @if ($errors->any())
+                <div class="text-center">
+                    <div>
+                        @foreach ($errors->all() as $error)
+                            <p class="text-danger">{{$error}}</p>
+                        @endforeach
+                    </div>
+                </div>
+            @endif --}}
             <div class="card card-primary">
                 <div class="card-header">
                   <h3 class="card-title">Nouveau Ticket</h3>
                 </div>
 
-                <form method="POST" action="{{route('ticket_store')}}"  >
+                <form method="POST" action="{{route('ticket_store')}}" enctype="multipart/form-data" >
                     @csrf
                     <div class="card-body">
                         <div class="form-inline mb-3">
                             <div class="form-group">
                                 <label for="prenom" class="mr-4">Nom</label>
-                                <input type="text" class="form-control m-1" value="{{Auth::user()->prenom}}" id="prenom"  name="prenom" disabled>
+                                <input type="text" class="form-control m-1" value="{{$user->prenom}}" id="prenom"  name="prenom" disabled>
                             </div>
 
                             <div class="form-group">
                                 <label for="email" class="mr-1">Courriel</label>
-                                <input type="email" class="form-control m-1" value="{{Auth::user()->email}}" id="email"  name="email" disabled>
+                                <input type="email" class="form-control m-1" value="{{$user->email}}" id="email"  name="email" disabled>
                             </div>
 
                             <div class="form-group">
                                 <label for="numero" class="mr-1">Numero</label>
-                                <input type="number" class="form-control m-1" id="numero" value="{{Auth::user()->id}}" name="user_id" hidden>
-                                <input type="number" class="form-control m-1" id="numero" value="{{Auth::user()->id}}" name="user_id" disabled>
+                                <input type="number" class="form-control m-1" id="numero" value="{{$user->id}}" name="user_id" hidden>
+                                <input type="number" class="form-control m-1" id="numero" value="{{$user->id}}" name="user_id" disabled>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="titre">Titre du Ticket *</label>
-                            <input type="text" class="form-control" id="titre" name="titre" placeholder="titre">
+                            <input type="text" class="form-control" id="titre" value="{{old('titre')}}" name="titre" placeholder="titre">
                             @error('titre')
-                            <div class="text-danger">{{$message}}</div>
-                        @enderror
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                        
-                        <div class="form-inline mb-3">
-                            <label for="service" class="mr-2">Assigner à</label>
-                            <select class="form-control col-md-4" id="service" name="service_id">
-                                <option value="">Service</option>
-                                @foreach ($services as $service)
-                                
-                                    <option value="{{$service->id}}">{{$service->libelle}}</option>
-                                @endforeach
-                            </select>
+                        <div class="d-lg-flex justify-content-lg-between align-items-lg-center mb-3">
+                            <div class="w-100 mr-lg-1">
+                                <label for="service" >Assigner à</label>
+                                <select class="form-control" id="service" name="service_id">
+                                    <option value="">--service--</option>
+                                    @foreach ($services as $service)
+                                    
+                                        <option value="{{$service->id}}">{{$service->libelle}}</option>
+                                    @endforeach
+                                </select>
+                                @error('service_id')
+                                    <div class="text-danger">{{$message}}</div> 
+                                @enderror
+                            </div>
 
-                            <label for="priorite" class="m-2">Priorité </label>
-                            <select class="form-control col-md-4" id="priorite" name="priorite_id">
-                                @foreach ($priorites as $priorite)
-                                
-                                    <option value="{{$priorite->id}}">{{$priorite->libelle}}</option>
-                                @endforeach
-                            </select>
-                            @error('priorite_id')
-                                <div class="text-danger">{{$message}}</div>
-                            @enderror
-                            @error('service')
-                                <div class="text-danger">{{$message}}</div>
-                            @enderror
+                            <div class="w-100">
+                                <label for="priorite" >Priorité </label>
+                                <select class="form-control" id="priorite" name="priorite_id">
+                                    <option value="">--priorité--</option>
+                                    @foreach ($priorites as $priorite)
+                                    
+                                        <option value="{{$priorite->id}}">{{$priorite->libelle}}</option>
+                                    @endforeach
+                                </select>
+                                @error('priorite_id')
+                                    <div class="text-danger">{{$message}}</div>
+                                @enderror
+                            </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="client">Client</label>
-                            <select class="form-control" id="client" name="client_id">
-                                <option value="">client</option>
-                                @foreach ($clients as $client)
-                                
-                                    <option value="{{$client->id}}">{{$client->nom}}</option>
-                                @endforeach
-                            </select>
-                            @error('client_id')
-                            <div class="text-danger">{{$message}}</div>
-                        @enderror
+                            <input type="number" class="form-control" name="client_id" value="{{$user->client_id}}" hidden>
                         </div>
                         <div class="form-group">
                             <label for="entite">Entité</label>
                             <select class="form-control" id="entite" name="societe_id">
-                                <option value="">entité</option>
+                                <option value="">--entité--</option>
                                 @foreach ($entites as $entite)
                                     <option value="{{$entite->id}}">{{$entite->libelle}}</option>
                                 @endforeach
                             </select>
-                        </div>
-                        
-                        <!-- Date -->
-                        <div class="form-group">
-                            <label>Date:</label>
-                            <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate" name="date"/>
-                                <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                </div>
-                            </div>
-                            @error('date')
-                            <div class="text-danger">{{$message}}</div>
-                        @enderror
+                            @error('societe_id')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
 
                         <div class="form-group">
                             <label for="file">Fichier</label>
-                            <div class="input-group">
+                            <div class="input-group col-lg-6">
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="file" name="fichier">
-                                    <label class="custom-file-label" for="file">Choisir un fichier</label>
+                                    <input type="file" class="custom-file-input" value="{{old('fichiers')}}" id="file" name="fichiers[]" multiple>
+                                    <label class="custom-file-label" for="file">Choisir un ou plusieurs fichier(s)</label>
                                 </div>
                             </div>
                             @error('fichier')
@@ -142,10 +135,10 @@
 
                         <div class="form-group">
                             <label for="message">Détail *</label>
-                            <textarea name="message" id="message"  rows="10" class="form-control"></textarea>
+                            <textarea name="message" id="message"  rows="5" class="form-control">{{old('message')}}</textarea>
                             @error('message')
-                            <div class="text-danger">{{$message}}</div>
-                        @enderror
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
 
                     </div>
@@ -164,30 +157,30 @@
 @section('js')
 
 <!-- bs-custom-file-input -->
-    <script src="{{asset('adminlte/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
     <!-- Select2 -->
-    <script src="{{asset('adminlte/plugins/select2/js/select2.full.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/select2/js/select2.full.min.js')}}"></script>
     <!-- Bootstrap4 Duallistbox -->
-    <script src="{{asset('adminlte/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
     <!-- InputMask -->
-    <script src="{{asset('adminlte/plugins/moment/moment.min.js')}}"></script>
-    <script src="{{asset('adminlte/plugins/inputmask/jquery.inputmask.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/moment/moment.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/inputmask/jquery.inputmask.min.js')}}"></script>
     <!-- date-range-picker -->
-    <script src="{{asset('adminlte/plugins/daterangepicker/daterangepicker.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/daterangepicker/daterangepicker.js')}}"></script>
     <!-- bootstrap color picker -->
-    <script src="{{asset('adminlte/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js')}}"></script>
     <!-- Tempusdominus Bootstrap 4 -->
-    <script src="{{asset('adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
     <!-- Bootstrap Switch -->
-    <script src="{{asset('adminlte/plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
     <!-- BS-Stepper -->
-    <script src="{{asset('adminlte/plugins/bs-stepper/js/bs-stepper.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/bs-stepper/js/bs-stepper.min.js')}}"></script>
     <!-- dropzonejs -->
-    <script src="{{asset('adminlte/plugins/dropzone/min/dropzone.min.js')}}"></script>
+    <script src="{{asset(env('PUBLIC_URL').'adminlte/plugins/dropzone/min/dropzone.min.js')}}"></script>
 
 
     <!-- AdminLTE App -->
-    <script src="{{asset('adminlte/js/adminlte.min.js')}}"></script>
+    <!--<script src="{{asset(env('PUBLIC_URL').'adminlte/js/adminlte.min.js')}}"></script>-->
     <!-- Page specific script -->
     <script>
         $(function () {
@@ -284,12 +277,12 @@
     // DropzoneJS Demo Code End
     </script>
 
-<script src="https://cdn.tiny.cloud/1/ix8b72cwx40l8ynsz2d4t2hra6pq2tlsaiodp7b8uhowd28x/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+{{-- <script src="https://cdn.tiny.cloud/1/ix8b72cwx40l8ynsz2d4t2hra6pq2tlsaiodp7b8uhowd28x/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
    tinymce.init({
      selector: 'textarea#message', // Replace this CSS selector to match the placeholder element for TinyMCE
      plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
       toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
    });
-</script>
+</script> --}}
 @endsection

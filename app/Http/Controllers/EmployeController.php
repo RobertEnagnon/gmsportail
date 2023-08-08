@@ -8,12 +8,21 @@ use App\Models\Site;
 use App\Models\Societe;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Throwable;
 
 class EmployeController extends Controller
 {
     
     public function index(){
-        $employes = Employe::all();
+        $employes =null;
+       //http://178.238.238.52:8083/api/gms/employes/GMS/1205
+
+        if (Auth::user()->is_admin) {
+            $employes = Employe::all();
+        } else {
+            $employes = Employe::where('client_id',Auth::user()->client_id)->get();
+        }
         return view('admin.employe.index', compact('employes'));
     }
 
@@ -32,6 +41,7 @@ class EmployeController extends Controller
     }
 
     public function store(Request $request){
+        $this->authorize('create', Employe::class);
        
         $this->validate($request,[
             'matricule'=>'required',
@@ -42,11 +52,20 @@ class EmployeController extends Controller
             'site_id'=>'required',
             'client_id'=>'required',
             'societe_id'=>'required',
-            'date'=>'required'
+        ],[
+            'matricule'=>'Ce champs est obligatoire',
+            'nom'=>'Ce champs est obligatoire',
+            'prenom'=>'Ce champs est obligatoire',
+            'cin'=>'Ce champs est obligatoire',
+            'cnss'=>'Ce champs est obligatoire',
+            'site_id'=>'Ce champs est obligatoire',
+            'client_id'=>'Ce champs est obligatoire',
+            'societe_id'=>'Ce champs est obligatoire',
         ]);
         
 
-        if (Employe::create([
+        try {
+             Employe::create([
             'matricule'=>$request->matricule,
             'nom'=>$request->nom,
             'prenom'=>$request->prenom,
@@ -55,15 +74,13 @@ class EmployeController extends Controller
             'site_id'=>$request->site_id,
             'client_id'=>$request->client_id,
             'societe_id'=>$request->societe_id,
-            'date'=>Carbon::parse($request->date)
-        ])) {
+             ]);
             flash()->addSuccess("Employé créé avec sucèss");
             return to_route('employes');
-        } else {
-            flash()->addError('Erreur! Echec de création de l\'Employé');
+        } catch (\Throwable $th) {
+            flash()->addError('Erreur! Echec de création de l\'Employé: '.$th->getMessage());
             return to_route('employe_create');
-        }
-        
+        } 
 
     }
 
@@ -87,31 +104,42 @@ class EmployeController extends Controller
             'site_id'=>'required',
             'client_id'=>'required',
             'societe_id'=>'required',
-            'date'=>'required'
+        ],[
+            'matricule'=>'Ce champs est obligatoire',
+            'nom'=>'Ce champs est obligatoire',
+            'prenom'=>'Ce champs est obligatoire',
+            'cin'=>'Ce champs est obligatoire',
+            'cnss'=>'Ce champs est obligatoire',
+            'site_id'=>'Ce champs est obligatoire',
+            'client_id'=>'Ce champs est obligatoire',
+            'societe_id'=>'Ce champs est obligatoire',
         ]);
 
 
-        if(Employe::where('id',$request->id)->update([
-            'matricule'=>$request->matricule,
-            'nom'=>$request->nom,
-            'prenom'=>$request->prenom,
-            'cin'=>$request->cin,
-            'cnss'=>$request->cnss,
-            'site_id'=>$request->site_id,
-            'client_id'=>$request->client_id,
-            'societe_id'=>$request->societe_id,
-        ])) {
+        try{
+            Employe::where('id',$request->id)->update([
+                'matricule'=>$request->matricule,
+                'nom'=>$request->nom,
+                'prenom'=>$request->prenom,
+                'cin'=>$request->cin,
+                'cnss'=>$request->cnss,
+                'site_id'=>$request->site_id,
+                'client_id'=>$request->client_id,
+                'societe_id'=>$request->societe_id,
+            ]);
             flash()->addSuccess('Sucèss! Employé modifié avec sucèss');
             return to_route('employes');
-        } else {
-            flash()->addError('Oops! Erreur de modifications');
+        } catch(\Throwable $th) {
+            flash()->addError('Oops! Erreur de modifications: '.$th->getMessage());
             return to_route('employe_edit',$request->id);
         }
     }
 
-    public function delete(int $id){
+    public function delete(Employe $employe){
+        // $this->authorize('update',$employe);
         try {
-            Employe::destroy($id);
+            // Employe::destroy($id);
+            $employe->delete();
             flash()->addSuccess('Sucèss! Employé supprimé avec sucèss');
             return to_route('employes');
         } catch (\Throwable $th) {

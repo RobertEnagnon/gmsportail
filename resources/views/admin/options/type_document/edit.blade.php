@@ -4,7 +4,7 @@
 
 @section('main')
     <div class="row">
-        <div class="col-6 mx-auto">
+        <div class="col-lg-6 col-md-8 mx-auto">
             <div class="card card-primary">
                 <div class="card-header">
                   <h3 class="card-title">Modifier le Type de Document</h3>

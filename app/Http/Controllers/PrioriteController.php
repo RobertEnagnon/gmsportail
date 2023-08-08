@@ -16,16 +16,18 @@ class PrioriteController extends Controller
         
         $this->validate($request,[
             'libelle'=>'required|string',
+        ],[
+            'libelle'=>'Ce champs est obligatoire',
         ]);
         
-
-        if(Priorite::create([
-            'libelle'=>$request->libelle
-        ])){
+        try {
+            Priorite::create([
+                'libelle'=>$request->libelle
+            ]);
             flash()->addSuccess("Priorité créée avec sucèss");
             return to_route('options');
-        } else {
-            flash()->addError('Erreur! Echec de création de Priorité');
+        } catch (\Throwable $th) {
+            flash()->addError('Erreur! Echec de création de Priorité: '.$th->getMessage());
             return to_route('priorite_create');
         }
 
@@ -42,16 +44,19 @@ class PrioriteController extends Controller
         $this->validate($request,[
             'id'=>'required',
             'libelle'=>'required|string',
+        ],[
+            'libelle'=>'Ce champs est obligatoire',
         ]);
 
 
-        if(Priorite::where('id',$request->id)->update([
+        try{
+            Priorite::where('id',$request->id)->update([
             'libelle'=>$request->libelle,
-        ])){
+            ]);
             flash()->addSuccess('Sucèss! Priorité modifiée avec sucèss');
             return to_route('options');
-        } else {
-            flash()->addError('Oops! Erreur de modifications');
+        } catch (\Throwable $th) {
+            flash()->addError('Oops! Erreur de modifications: '.$th->getMessage());
             return to_route('priorite_edit',$request->id);
         }
     }

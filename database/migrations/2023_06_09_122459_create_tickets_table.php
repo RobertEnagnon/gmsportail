@@ -14,30 +14,27 @@ return new class extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->string('titre');
-            $table->text('message');
-            $table->date('date')->nullable()->default(null);
-            $table->string('fichier')->nullable()->default(null);
-            $table->unsignedBigInteger('client_id');
-            $table->unsignedBigInteger('service_id');
-            $table->unsignedBigInteger('priorite_id');
-            $table->unsignedBigInteger('societe_id');
-            $table->unsignedBigInteger('user_id');
+        //     $table->text('message');
+            $table->dateTime('date')->nullable()->default(null);
+            $table->string('fichiers')->nullable()->default(null);
+            $table->enum('status', ['Ouvert', 'Répondu', 'Réponse du client', 'Fermé'])->default('Ouvert');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('client_id')->nullable();
+            $table->unsignedBigInteger('service_id')->nullable();
+            $table->unsignedBigInteger('priorite_id')->nullable();
+            $table->unsignedBigInteger('societe_id')->nullable();
+            $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')
-                    ->onUpdate('restrict')
-                    ->onDelete('restrict');
+                    ->onDelete('set null');
             $table->foreign('service_id')->references('id')->on('services')
-                    ->onUpdate('restrict')
-                    ->onDelete('restrict');
+                    ->onDelete('set null');
             $table->foreign('priorite_id')->references('id')->on('priorites')
-                    ->onUpdate('restrict')
-                    ->onDelete('restrict');
+                    ->onDelete('set null');
             $table->foreign('societe_id')->references('id')->on('societes')
-                    ->onUpdate('restrict')
-                    ->onDelete('restrict');
+                    ->onDelete('set null');
             $table->foreign('user_id')->references('id')->on('users')
-                    ->onUpdate('restrict')
-                    ->onDelete('restrict');
+                    ->onDelete('set null');
         });
     }
 

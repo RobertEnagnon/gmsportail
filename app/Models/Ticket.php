@@ -14,8 +14,9 @@ class Ticket extends Model
     protected $fillable = [
         'titre',
         'message',
+        'status',
         'date',
-        'fichier',
+        'fichiers',
         'client_id',
         'societe_id',
         'service_id',
@@ -41,5 +42,9 @@ class Ticket extends Model
 
     public function user(){
         return $this->belongsTo(User::class,'user_id');
+    }
+
+    public function messages(){
+        return $this->hasMany(TicketMessage::class,'ticket_id');
     }
 }
